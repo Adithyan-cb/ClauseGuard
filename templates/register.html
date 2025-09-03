@@ -1,140 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-    <style>
-        /* Basic reset */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Register{% endblock title %}
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'assets/css/register.css'%}">
+{% endblock extra_css %}
 
-        .register-container {
-            background: white;
-            padding: 30px 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-        }
+{% block content %}
 
-        .register-container h2 {
-            margin-bottom: 20px;
-            text-align: center;
-            color: #333;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #555;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="password"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        textarea {
-            resize: vertical;
-            height: 60px;
-        }
-
-        input[type="submit"] {
-            width: 100%;
-            padding: 12px;
-            background-color: #28a745;
-            border: none;
-            color: white;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #218838;
-        }
-
-        .footer {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 13px;
-            color: #777;
-        }
-    </style>
-</head>
-<body>
-
-<div class="register-container">
-    <h2>Register</h2>
-    <form method="POST" action="/register/">
-        <!-- {% csrf_token %} ← Include this if using Django -->
-
-        <div class="form-group">
-            <label for="id_name">Full Name:</label>
-            <input type="text" id="id_name" name="name" required>
+    <!-- Register Section -->
+    <section class="register-section">
+        <div class="container d-flex justify-content-center">
+            <div class="register-container">
+                <div class="register-header">
+                    <i class="fas fa-shield-alt"></i>
+                    <h2>Register</h2>
+                    <p>create an account in Clause Guard</p>
+                </div>
+                
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="fullname" class="form-label">Full Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" id="fullname" placeholder="Enter your full name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address" class="form-label">Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            <textarea class="form-control" id="address" placeholder="Enter your address" rows="2" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="organization" class="form-label">Organization</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                            <input type="text" class="form-control" id="organization" placeholder="Enter your organization name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-at"></i></span>
+                            <input type="text" class="form-control" id="username" placeholder="Choose a username" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" id="password" placeholder="Create a password" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-user-plus me-2"></i> Create Account
+                        </button>
+                    </div>
+                </form>
+               
+            </div>
         </div>
+    </section>
 
-        <div class="form-group">
-            <label for="id_email">Email:</label>
-            <input type="email" id="id_email" name="email" required>
-        </div>
-
-        <div class="form-group">
-            <label for="id_phone">Phone:</label>
-            <input type="tel" id="id_phone" name="phone" required>
-        </div>
-
-        <div class="form-group">
-            <label for="id_address">Address:</label>
-            <textarea id="id_address" name="address" required></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="id_organization">Organization:</label>
-            <input type="text" id="id_organization" name="organization">
-        </div>
-
-        <div class="form-group">
-            <label for="id_username">Username:</label>
-            <input type="text" id="id_username" name="username" required>
-        </div>
-
-        <div class="form-group">
-            <label for="id_password">Password:</label>
-            <input type="password" id="id_password" name="password" required>
-        </div>
-
-        <input type="submit" value="Register">
-    </form>
-    <div class="footer">
-        Already have an account? <a href="/login/">Login</a>
-    </div>
-</div>
-
-</body>
-</html>
+{% endblock content %}
