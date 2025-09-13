@@ -1,14 +1,14 @@
 from django.shortcuts import render
 
 # Create your views here.
-def test(request):
-     return render(request,'index.html')
+def home(request):
+    return render(request,'home.html')
 
 def login(request):
-     return render(request,'login.html')
+    return render(request,'login.html')
 
 def register(request):
-     return render(request,'register.html')
+    return render(request,'register.html')
 
-def admin(request):
-     return render(request,'admin.html')
+def admin_dashboard(request):
+    return render(request,'admin.html')
