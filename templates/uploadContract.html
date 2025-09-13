@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Contract</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #0a2342; /* Navy blue */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-profile {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #071630; /* Darker navy */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 2.5rem;
+        }
+
+        .user-name {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .user-role {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .nav-menu {
+            flex-grow: 1;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-item:hover {
+            background-color: #071630; /* Darker navy */
+        }
+
+        .nav-item.active {
+            background-color: #071630; /* Darker navy */
+            border-left: 4px solid #d4af37; /* Metallic gold */
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .logout {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+        }
+
+        .logout:hover {
+            background-color: #071630; /* Darker navy */
+        }
+
+        .content-area {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background-color: white;
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-header h1 {
+            font-size: 1.8rem;
+            color: #0a2342; /* Navy blue */
+        }
+
+        .back-btn {
+            background-color: #0a2342; /* Navy blue */
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-btn:hover {
+            background-color: #071630; /* Darker navy */
+        }
+
+        .upload-container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            max-width: 700px;
+            margin: 0 auto;
+            border-top: 3px solid #d4af37; /* Metallic gold */
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #0a2342; /* Navy blue */
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #d4af37; /* Metallic gold */
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .file-upload input[type=file] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 40px 20px;
+            border: 2px dashed #d4af37; /* Metallic gold */
+            border-radius: 5px;
+            background-color: rgba(212, 175, 55, 0.05);
+            color: #d4af37; /* Metallic gold */
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .file-upload:hover .file-upload-label {
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .submit-btn {
+            background-color: #d4af37; /* Metallic gold */
+            color: #0a2342; /* Navy blue */
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+        }
+
+        .submit-btn:hover {
+            background-color: #b8941f; /* Darker gold */
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #0a2342; /* Navy blue */
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(150%);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 25px 0;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0a2342;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+
+            .content-area {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="user-profile">
+            <div class="profile-img">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-name">John Doe</div>
+            <div class="user-role">Standard User</div>
+        </div>
+
+        <div class="nav-menu">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="view_contracts.html" class="nav-item">
+                <i class="fas fa-file-contract"></i>
+                <span>View Contracts</span>
+            </a>
+            <a href="upload_contract.html" class="nav-item active">
+                <i class="fas fa-upload"></i>
+                <span>Upload Contract</span>
+            </a>
+            <a href="send_complaint.html" class="nav-item">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>Send Complaint</span>
+            </a>
+            <a href="submit_feedback.html" class="nav-item">
+                <i class="fas fa-comment-dots"></i>
+                <span>Submit Feedback</span>
+            </a>
+        </div>
+
+        <a href="#" class="logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Log Out</span>
+        </a>
+    </div>
+
+    <div class="content-area">
+        <div class="content-header">
+            <h1>Upload Contract</h1>
+            <a href="dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Dashboard</span>
+            </a>
+        </div>
+
+        <div class="upload-container">
+            <form id="contract-form">
+                <div class="form-group">
+                    <label>Upload Contract Document</label>
+                    <div class="file-upload">
+                        <input type="file" id="contract-file" required>
+                        <label for="contract-file" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Choose file or drag here</span>
+                        </label>
+                    </div>
+                    <div class="file-info" id="file-info">Supported formats: PDF, DOC, DOCX (Max size: 10MB)</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="section-title">
+                    <i class="fas fa-cog"></i>
+                    <span>Additional Information</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="llm-model">Select LLM Model</label>
+                    <select id="llm-model" class="form-control" required>
+                        <option value="">Select LLM model</option>
+                        <option value="gpt-4">GPT-oss-20b</option>
+                        <option value="gpt-3.5">GPT-oss-120b</option>
+                        <option value="llama-2">Llama 3</option>
+                        <option value="gemini">Gemini</option>
+                    </select>
+                </div>
+
+                 <div class="form-group">
+                    <label for="contract-type">Contract Type</label>
+                    <select id="contract-type" class="form-control" required>
+                        <option value="">Select contract type</option>
+                        <option value="service">Service Agreement</option>
+                        <option value="employment">Employment Contract</option>
+                        <option value="partnership">Partnership Agreement</option>
+                        <option value="nda">Non-Disclosure Agreement</option>
+                        <option value="vendor">Vendor Contract</option>
+                    </select>
+                </div>
+                  <div class="form-group">
+                    <label for="Jurisdiction">Jurisdiction</label>
+                    <select id="Jurisdiction" class="form-control" required>
+                        <option value="">Select Jurisdiction</option>
+                        <option value="India">India</option>
+                        <option value="United States">United States</option>
+                        <option value="United Kingdom">United Kindom</option>
+                        <option value="Japan">Japan</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-upload"></i>
+                    <span>Upload Contract</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <span id="notification-text">Contract uploaded successfully!</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const contractForm = document.getElementById('contract-form');
+            const contractFile = document.getElementById('contract-file');
+            const fileInfo = document.getElementById('file-info');
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+
+            // Update file info when file is selected
+            contractFile.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    const fileName = this.files[0].name;
+                    const fileSize = (this.files[0].size / 1024 / 1024).toFixed(2);
+                    fileInfo.textContent = `Selected file: ${fileName} (${fileSize} MB)`;
+                } else {
+                    fileInfo.textContent = 'Supported formats: PDF, DOC, DOCX (Max size: 10MB)';
+                }
+            });
+
+            // Handle form submission
+            contractForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Show notification
+                notificationText.textContent = 'Contract uploaded successfully!';
+                notification.classList.add('show');
+
+                // Reset form
+                contractForm.reset();
+                fileInfo.textContent = 'Supported formats: PDF, DOC, DOCX (Max size: 10MB)';
+
+                // Hide notification after 3 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>

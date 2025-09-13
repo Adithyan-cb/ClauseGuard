@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #0a2342; /* Navy blue */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-profile {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #071630; /* Darker navy */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 2.5rem;
+        }
+
+        .user-name {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .user-role {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .nav-menu {
+            flex-grow: 1;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-item:hover {
+            background-color: #071630; /* Darker navy */
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .logout {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+        }
+
+        .logout:hover {
+            background-color: #071630; /* Darker navy */
+        }
+
+        .content-area {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background-color: white;
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .content-header h1 {
+            font-size: 1.8rem;
+            color: #0a2342; /* Navy blue */
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 3px solid #d4af37; /* Metallic gold */
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            color: #d4af37; /* Metallic gold */
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #0a2342; /* Navy blue */
+        }
+
+        .card-description {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .card-link {
+            background-color: #d4af37; /* Metallic gold */
+            color: #0a2342; /* Navy blue */
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+            font-weight: 600;
+        }
+
+        .card-link:hover {
+            background-color: #b8941f; /* Darker gold */
+        }
+
+        .recent-activity {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .recent-activity h3 {
+            margin-bottom: 20px;
+            color: #0a2342; /* Navy blue */
+        }
+
+        .activity-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f0e6d2; /* Light gold */
+            color: #d4af37; /* Metallic gold */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .activity-content {
+            flex-grow: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+
+            .content-area {
+                padding: 15px;
+            }
+
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="user-profile">
+            <div class="profile-img">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-name">John Doe</div>
+            <div class="user-role">Standard User</div>
+        </div>
+
+        <div class="nav-menu">
+            <a href="{% url 'user-dashboard'%} " class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{% url 'view-contract' %} " class="nav-item">
+                <i class="fas fa-file-contract"></i>
+                <span>View Contracts</span>
+            </a>
+            <a href="{% url 'upload-contract' %} " class="nav-item">
+                <i class="fas fa-upload"></i>
+                <span>Upload Contract</span>
+            </a>
+            <a href="{% url 'send-complaint' %} " class="nav-item">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>Send Complaint</span>
+            </a>
+            <a href="{% url 'send-feedback' %}" class="nav-item">
+                <i class="fas fa-comment-dots"></i>
+                <span>Submit Feedback</span>
+            </a>
+        </div>
+
+        <a href="{% url 'login' %}" class="logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Log Out</span>
+        </a>
+    </div>
+
+    <div class="content-area">
+        <div class="content-header">
+            <h1>User Dashboard</h1>
+        </div>
+
+        <div class="dashboard-cards">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <div class="card-title">View Contracts</div>
+                <div class="card-description">Access and manage your existing contracts</div>
+                <a href="{% url 'view-contract' %}" class="card-link">View Contracts</a>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-upload"></i>
+                </div>
+                <div class="card-title">Upload Contract</div>
+                <div class="card-description">Submit new contracts for review</div>
+                <a href="{% url 'upload-contract' %} " class="card-link">Upload Contract</a>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="card-title">Send Complaint</div>
+                <div class="card-description">Report issues or concerns</div>
+                <a href="{% url 'send-complaint' %} " class="card-link">Send Complaint</a>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <div class="card-title">Submit Feedback</div>
+                <div class="card-description">Share your thoughts and suggestions</div>
+                <a href="{% url 'send-feedback' %}" class="card-link">Submit Feedback</a>
+            </div>
+        </div>
+
+        <div class="recent-activity">
+            <h3>Recent Activity</h3>
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">Contract "Service Agreement" approved</div>
+                    <div class="activity-time">2 hours ago</div>
+                </div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-upload"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">Uploaded new contract "Partnership Agreement"</div>
+                    <div class="activity-time">Yesterday</div>
+                </div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">Feedback submitted on dashboard usability</div>
+                    <div class="activity-time">3 days ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
