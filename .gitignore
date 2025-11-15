@@ -1,10 +1,8 @@
-<<<<<<< HEAD
 venv
 __pycache__
 .env
 db.sqlite3
 migrations
-=======
 # Virtual Environments
 clauseVenv/
 venv/
@@ -64,4 +62,3 @@ Thumbs.db
 
 # Migrations (keep structure but ignore Python files)
 migrations/__pycache__/
->>>>>>> abcfc4a072dfe10b5771c1baf266886ae3398f95
