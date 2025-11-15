@@ -33,3 +33,5 @@ class Feedback(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
     date = models.CharField(max_length=100)
+
+
