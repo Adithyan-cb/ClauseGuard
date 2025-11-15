@@ -1,4 +1,5 @@
-.venv
+clauseVenv
 __pycache__
 .env
 db.sqlite3
+migrations
