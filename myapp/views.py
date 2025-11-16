@@ -1,5 +1,14 @@
 from django.shortcuts import render
 
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_protect
+import PyPDF2
+from docx import Document
+import os
+import logging
+
 # Create your views here.
 def home(request):
     return render(request,'home.html')

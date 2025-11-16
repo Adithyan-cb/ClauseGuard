@@ -93,6 +93,9 @@ class Feedback(models.Model):
         on_delete=models.CASCADE,
         related_name="feedbacks"
     )
+    date = models.CharField(max_length=100)
+
+
     rating = models.IntegerField()
     message = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

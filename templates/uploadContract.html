@@ -22,7 +22,7 @@
 
         .sidebar {
             width: 280px;
-            background-color: #0a2342; /* Navy blue */
+            background-color: #0a2342;
             color: white;
             display: flex;
             flex-direction: column;
@@ -39,7 +39,7 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background-color: #071630; /* Darker navy */
+            background-color: #071630;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -74,12 +74,12 @@
         }
 
         .nav-item:hover {
-            background-color: #071630; /* Darker navy */
+            background-color: #071630;
         }
 
         .nav-item.active {
-            background-color: #071630; /* Darker navy */
-            border-left: 4px solid #d4af37; /* Metallic gold */
+            background-color: #071630;
+            border-left: 4px solid #d4af37;
         }
 
         .nav-item i {
@@ -101,7 +101,7 @@
         }
 
         .logout:hover {
-            background-color: #071630; /* Darker navy */
+            background-color: #071630;
         }
 
         .content-area {
@@ -122,11 +122,11 @@
 
         .content-header h1 {
             font-size: 1.8rem;
-            color: #0a2342; /* Navy blue */
+            color: #0a2342;
         }
 
         .back-btn {
-            background-color: #0a2342; /* Navy blue */
+            background-color: #0a2342;
             color: white;
             border: none;
             padding: 8px 15px;
@@ -140,7 +140,7 @@
         }
 
         .back-btn:hover {
-            background-color: #071630; /* Darker navy */
+            background-color: #071630;
         }
 
         .upload-container {
@@ -150,7 +150,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             max-width: 700px;
             margin: 0 auto;
-            border-top: 3px solid #d4af37; /* Metallic gold */
+            border-top: 3px solid #d4af37;
         }
 
         .form-group {
@@ -161,7 +161,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #0a2342; /* Navy blue */
+            color: #0a2342;
         }
 
         .form-control {
@@ -174,7 +174,7 @@
 
         .form-control:focus {
             outline: none;
-            border-color: #d4af37; /* Metallic gold */
+            border-color: #d4af37;
             box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
         }
 
@@ -199,10 +199,10 @@
             justify-content: center;
             gap: 10px;
             padding: 40px 20px;
-            border: 2px dashed #d4af37; /* Metallic gold */
+            border: 2px dashed #d4af37;
             border-radius: 5px;
             background-color: rgba(212, 175, 55, 0.05);
-            color: #d4af37; /* Metallic gold */
+            color: #d4af37;
             font-weight: 500;
             transition: background-color 0.3s;
         }
@@ -218,8 +218,8 @@
         }
 
         .submit-btn {
-            background-color: #d4af37; /* Metallic gold */
-            color: #0a2342; /* Navy blue */
+            background-color: #d4af37;
+            color: #0a2342;
             border: none;
             padding: 12px 25px;
             border-radius: 5px;
@@ -234,25 +234,46 @@
         }
 
         .submit-btn:hover {
-            background-color: #b8941f; /* Darker gold */
+            background-color: #b8941f;
+        }
+
+        .submit-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
 
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            background-color: #0a2342; /* Navy blue */
-            color: white;
             padding: 15px 25px;
             border-radius: 5px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transform: translateX(150%);
             transition: transform 0.3s ease-out;
             z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .notification.show {
             transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .notification.error {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .notification.loading {
+            background-color: #0a2342;
+            color: white;
         }
 
         .divider {
@@ -269,6 +290,70 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .extracted-text-section {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            border-left: 4px solid #d4af37;
+        }
+
+        .extracted-text-section.show {
+            display: block;
+        }
+
+        .extracted-text-section h3 {
+            color: #0a2342;
+            margin-bottom: 15px;
+        }
+
+        .extracted-text-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .copy-extracted-btn {
+            margin-top: 15px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-extracted-btn:hover {
+            background-color: #229954;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 16px;
+            height: 16px;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {
@@ -329,7 +414,7 @@
     <div class="content-area">
         <div class="content-header">
             <h1>Upload Contract</h1>
-            <a href="{%url 'user-dashboard' %}" class="back-btn">
+            <a href="{% url 'user-dashboard' %}" class="back-btn">
                 <i class="fas fa-arrow-left"></i>
                 <span>Back to Dashboard</span>
             </a>
@@ -337,10 +422,11 @@
 
         <div class="upload-container">
             <form id="contract-form">
+                {% csrf_token %}
                 <div class="form-group">
                     <label>Upload Contract Document</label>
                     <div class="file-upload">
-                        <input type="file" id="contract-file" required>
+                        <input type="file" id="contract-file" accept=".pdf,.doc,.docx" required>
                         <label for="contract-file" class="file-upload-label">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <span>Choose file or drag here</span>
@@ -367,7 +453,7 @@
                     </select>
                 </div>
 
-                 <div class="form-group">
+                <div class="form-group">
                     <label for="contract-type">Contract Type</label>
                     <select id="contract-type" class="form-control" required>
                         <option value="">Select contract type</option>
@@ -378,66 +464,22 @@
                         <option value="vendor">Vendor Contract</option>
                     </select>
                 </div>
-                  <div class="form-group">
+
+                <div class="form-group">
                     <label for="Jurisdiction">Jurisdiction</label>
                     <select id="Jurisdiction" class="form-control" required>
                         <option value="">Select Jurisdiction</option>
                         <option value="India">India</option>
                         <option value="United States">United States</option>
-                        <option value="United Kingdom">United Kindom</option>
+                        <option value="United Kingdom">United Kingdom</option>
                         <option value="Japan">Japan</option>
                     </select>
                 </div>
 
-                <button type="submit" class="submit-btn">
+                <button type="submit" class="submit-btn" id="submit-btn">
                     <i class="fas fa-upload"></i>
                     <span>Upload Contract</span>
                 </button>
             </form>
-        </div>
-    </div>
-
-    <div id="notification" class="notification">
-        <span id="notification-text">Contract uploaded successfully!</span>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const contractForm = document.getElementById('contract-form');
-            const contractFile = document.getElementById('contract-file');
-            const fileInfo = document.getElementById('file-info');
-            const notification = document.getElementById('notification');
-            const notificationText = document.getElementById('notification-text');
-
-            // Update file info when file is selected
-            contractFile.addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    const fileName = this.files[0].name;
-                    const fileSize = (this.files[0].size / 1024 / 1024).toFixed(2);
-                    fileInfo.textContent = `Selected file: ${fileName} (${fileSize} MB)`;
-                } else {
-                    fileInfo.textContent = 'Supported formats: PDF, DOC, DOCX (Max size: 10MB)';
-                }
-            });
-
-            // Handle form submission
-            contractForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                // Show notification
-                notificationText.textContent = 'Contract uploaded successfully!';
-                notification.classList.add('show');
-
-                // Reset form
-                contractForm.reset();
-                fileInfo.textContent = 'Supported formats: PDF, DOC, DOCX (Max size: 10MB)';
-
-                // Hide notification after 3 seconds
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-            });
-        });
-    </script>
 </body>
 </html>
