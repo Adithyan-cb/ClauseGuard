@@ -8,6 +8,51 @@
 
 {% block content %}
 
+<script>
+    // Handle form submission
+    document.addEventListener('DOMContentLoaded', function() {
+        const registerForm = document.getElementById('registerForm');
+        
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Stop default form submission
+            
+            // Get the form data
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Get CSRF token from the page
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            // Create FormData object
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('confirmPassword', confirmPassword);
+            formData.append('csrfmiddlewaretoken', csrfToken);
+            
+            // Send the data via POST request
+            fetch('/register/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    registerForm.reset(); // Clear the form
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        });
+    });
+</script>
+
     <!-- Register Section -->
     <section class="register-section">
         <div class="container d-flex justify-content-center">
@@ -19,6 +64,7 @@
                 </div>
                 
                 <form id="registerForm">
+                    {% csrf_token %}
 
                     <div class="form-group">
                         <label for="username" class="form-label">Username</label>
