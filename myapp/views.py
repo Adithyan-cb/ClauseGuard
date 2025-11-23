@@ -39,17 +39,6 @@ def register(request):
         except Exception as e:
             return JsonResponse({"status":"error","message":str(e)})
         
-        # Print the data to terminal
-        # print("=" * 50)
-        # print("NEW REGISTRATION SUBMISSION")
-        # print("=" * 50)
-        # print(f"Username: {username}")
-        # print(f"Email: {email}")
-        # print(f"Password: {password}")
-        # print(f"Confirm Password: {confirmPassword}")
-        # print("=" * 50)
-        
-        # Send success response
         
     
     # If GET request, show the registration form
