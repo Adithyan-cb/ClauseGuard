@@ -40,9 +40,11 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.status === 'success') {
-                    alert(data.message);
-                    registerForm.reset(); // Clear the form
+                if (data.status === 'error') {
+                    alert("Error:" + data.message);
+                } else {
+                    alert("Sucess:" + data.message)
+                    registerForm.reset(); 
                 }
             })
             .catch(error => {

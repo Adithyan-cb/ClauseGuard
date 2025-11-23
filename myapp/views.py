@@ -1,10 +1,9 @@
 from django.shortcuts import render
-
-from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_protect
-import PyPDF2
+from django.contrib.auth.models import User
+#import PyPDF2
 from docx import Document
 import os
 import logging
@@ -23,19 +22,24 @@ def register(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirmPassword = request.POST.get('confirmPassword')
+
+        # checking if confirm password matches password
+        if password != confirmPassword:
+            return JsonResponse({"status":"error","message":"password doesn't match"})
         
-        # Print the data to terminal
-        print("=" * 50)
-        print("NEW REGISTRATION SUBMISSION")
-        print("=" * 50)
-        print(f"Username: {username}")
-        print(f"Email: {email}")
-        print(f"Password: {password}")
-        print(f"Confirm Password: {confirmPassword}")
-        print("=" * 50)
+        # checking if the user already exists in the database
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({"status":"error","message":"user already exists.."})
         
-        # Send success response
-        return JsonResponse({'status': 'success', 'message': 'Account created successfully!'})
+        # creating a user and store in database
+        try:
+            user = User.objects.create_user(username=username,email=email,password=password)
+            user.save()
+            return JsonResponse({'status': 'success', 'message': 'Account created successfully!'})
+        except Exception as e:
+            return JsonResponse({"status":"error","message":str(e)})
+        
+        
     
     # If GET request, show the registration form
     return render(request,'register.html')
