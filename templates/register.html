@@ -36,15 +36,18 @@
             // Send the data via POST request
             fetch('/register/', {
                 method: 'POST',
-                body: formData
+                body: formData,
+                headers: {
+                    // Good practice for Django to know it's an AJAX request
+                    'X-Requested-With': 'XMLHttpRequest' 
+                }
             })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'error') {
                     alert("Error:" + data.message);
                 } else {
-                    alert("Sucess:" + data.message)
-                    registerForm.reset(); 
+                     window.location.href = data.redirect_url; 
                 }
             })
             .catch(error => {
