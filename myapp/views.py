@@ -8,7 +8,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 #import PyPDF2
-from docx import Document
 import os
 import logging
 
