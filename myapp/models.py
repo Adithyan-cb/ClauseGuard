@@ -1,26 +1,18 @@
 from django.db import models
-
-
-class User(models.Model):
-    id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=100)
-    email = models.EmailField(max_length=255, unique=True)
-    password_hash = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.username
+from django.contrib.auth.models import User
 
 
 class Contract(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="contracts")
-    original_filename = models.CharField(max_length=500)
-    file_path = models.CharField(max_length=400)
+    contract_file = models.FileField(upload_to='contracts/')
+    llm_model = models.CharField(max_length=50)
+    contract_type = models.CharField(max_length=50)
+    jurisdiction = models.CharField(max_length=50)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.original_filename} ({self.user.username})"
+        return f"{self.id} ({self.user.username})"
 
 
 class ContractAnalysis(models.Model):
