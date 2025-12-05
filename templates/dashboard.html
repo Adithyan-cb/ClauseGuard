@@ -250,7 +250,7 @@
             <div class="profile-img">
                 <i class="fas fa-user"></i>
             </div>
-            <div class="user-name">John Doe</div>
+            <div class="user-name">{{request.user.username}}</div>
             <div class="user-role">Standard User</div>
         </div>
 
@@ -277,7 +277,7 @@
             </a>
         </div>
 
-        <a href="{% url 'login' %}" class="logout">
+        <a href="{% url 'logout' %}" class="logout">
             <i class="fas fa-sign-out-alt"></i>
             <span>Log Out</span>
         </a>
@@ -285,7 +285,7 @@
 
     <div class="content-area">
         <div class="content-header">
-            <h1>User Dashboard</h1>
+            <h1>Welcome {% if request.user.is_authenticated %}{{request.user.username}}{% endif %}</h1>
         </div>
 
         <div class="dashboard-cards">

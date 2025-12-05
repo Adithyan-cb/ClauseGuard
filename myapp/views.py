@@ -1,13 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.urls import reverse
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
 #import PyPDF2
-from docx import Document
 import os
 import logging
 
@@ -29,20 +29,29 @@ def login_user(request):
             return JsonResponse({"status":"error","message":"user does to exists...!!"})
 
         usr = authenticate(request,username=username,password=password)
-
+        redirect_url = ""
         
         if usr is not None:
             login(request,usr)
-            # return JsonResponse({'status':'success','message':'login successful..!'})
+
+            if usr.is_staff:
+                redirect_url = reverse('admin-dashboard')
+            else:
+                redirect_url = reverse('user-dashboard')
+
             return JsonResponse({
                     'status': 'success',  # Must match the JS 'success'
                     'message': 'Login successful!',
-                    'redirect_url': reverse('user-dashboard') # Must send this key
+                    'redirect_url': redirect_url # Must send this key
                  })
         else:
             return JsonResponse({"status":"Error","message":"password or email doesn't match , please try again"})
 
     return render(request,'login.html')
+
+def user_logout(request):
+    logout(request)
+    return redirect('login')
 
 def register(request):
     if request.method == 'POST':
@@ -75,20 +84,26 @@ def register(request):
     # If GET request, show the registration form
     return render(request,'register.html')
 
+@login_required(login_url='login')
 def admin_dashboard(request):
     return render(request,'admin.html')
 
+@login_required(login_url='login')
 def user_dashboard(request):
     return render(request,'dashboard.html')
 
+@login_required(login_url='login')
 def view_contracts(request):
     return render(request,'viewContracts.html')
 
+@login_required(login_url='login')
 def upload_contract(request):
     return render(request,'uploadContract.html')
 
+@login_required(login_url='login')
 def send_complaint(request):
     return render(request,'complaint.html')
 
+@login_required(login_url='login')
 def feedback(request):
     return render(request,'feedback.html')

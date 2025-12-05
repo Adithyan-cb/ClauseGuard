@@ -273,10 +273,14 @@
             </div>
         </div>
 
-        <div class="logout">
+        {% comment %} <div class="logout">
             <i class="fas fa-sign-out-alt"></i>
             <span>Log Out</span>
-        </div>
+        </div> {% endcomment %}
+         <a href="{% url 'logout' %}" class="logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Log Out</span>
+        </a>
     </div>
 
     <div class="content-area">
