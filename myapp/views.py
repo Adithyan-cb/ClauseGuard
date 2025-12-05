@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
+from .models import Contract
 #import PyPDF2
 import os
 import logging
@@ -98,6 +99,70 @@ def view_contracts(request):
 
 @login_required(login_url='login')
 def upload_contract(request):
+    if request.method == 'POST':
+        try:
+            # Get the uploaded file and form data
+            contract_file = request.FILES.get('contract_file')
+            llm_model = request.POST.get('llm_model')
+            contract_type = request.POST.get('contract_type')
+            jurisdiction = request.POST.get('jurisdiction')
+
+            # Validate that file is provided
+            if not contract_file:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'No file provided. Please upload a contract file.'
+                }, status=400)
+
+            # Validate file extension
+            allowed_extensions = ['pdf', 'doc', 'docx']
+            file_ext = contract_file.name.split('.')[-1].lower()
+            if file_ext not in allowed_extensions:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': f'Invalid file type. Allowed: {", ".join(allowed_extensions).upper()}'
+                }, status=400)
+
+            # Validate file size (10MB)
+            max_size = 10 * 1024 * 1024  # 10MB
+            if contract_file.size > max_size:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'File size exceeds 10MB limit.'
+                }, status=400)
+
+            # Validate form fields
+            if not all([llm_model, contract_type, jurisdiction]):
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Please fill in all required fields.'
+                }, status=400)
+
+            # Create and save the Contract object
+            contract = Contract(
+                user_id=request.user.id,
+                contract_file=contract_file,
+                llm_model=llm_model,
+                contract_type=contract_type,
+                jurisdiction=jurisdiction
+            )
+            contract.save()
+
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Contract uploaded successfully!',
+                'contract_id': contract.id,
+                'file_name': contract_file.name
+            }, status=201)
+
+        except Exception as e:
+            logging.error(f"Error uploading contract: {str(e)}")
+            return JsonResponse({
+                'status': 'error',
+                'message': f'An error occurred: {str(e)}'
+            }, status=500)
+    
+    # GET request - show the upload form
     return render(request,'uploadContract.html')
 
 @login_required(login_url='login')
