@@ -426,7 +426,7 @@
                 <div class="form-group">
                     <label>Upload Contract Document</label>
                     <div class="file-upload">
-                        <input type="file" id="contract-file" accept=".pdf,.doc,.docx" required>
+                        <input type="file" id="contract-file" name="contract_file" accept=".pdf,.doc,.docx" required>
                         <label for="contract-file" class="file-upload-label">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <span>Choose file or drag here</span>
@@ -444,7 +444,7 @@
 
                 <div class="form-group">
                     <label for="llm-model">Select LLM Model</label>
-                    <select id="llm-model" class="form-control" required>
+                    <select id="llm-model" name="llm_model" class="form-control" required>
                         <option value="">Select LLM model</option>
                         <option value="gpt-4">GPT-oss-20b</option>
                         <option value="gpt-3.5">GPT-oss-120b</option>
@@ -455,7 +455,7 @@
 
                 <div class="form-group">
                     <label for="contract-type">Contract Type</label>
-                    <select id="contract-type" class="form-control" required>
+                    <select id="contract-type" name="contract_type" class="form-control" required>
                         <option value="">Select contract type</option>
                         <option value="service">Service Agreement</option>
                         <option value="employment">Employment Contract</option>
@@ -466,8 +466,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="Jurisdiction">Jurisdiction</label>
-                    <select id="Jurisdiction" class="form-control" required>
+                    <label for="jurisdiction">Jurisdiction</label>
+                    <select id="jurisdiction" name="jurisdiction" class="form-control" required>
                         <option value="">Select Jurisdiction</option>
                         <option value="India">India</option>
                         <option value="United States">United States</option>
@@ -481,5 +481,101 @@
                     <span>Upload Contract</span>
                 </button>
             </form>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        document.getElementById('contract-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('contract-file');
+            const llmModel = document.getElementById('llm-model').value;
+            const contractType = document.getElementById('contract-type').value;
+            const jurisdiction = document.getElementById('jurisdiction').value;
+            const submitBtn = document.getElementById('submit-btn');
+            const notification = document.getElementById('notification');
+
+            // Validate form inputs
+            if (!fileInput.files.length) {
+                showNotification('Please select a file', 'error');
+                return;
+            }
+
+            if (!llmModel || !contractType || !jurisdiction) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+
+            // Create FormData object
+            const formData = new FormData();
+            formData.append('contract_file', fileInput.files[0]);
+            formData.append('llm_model', llmModel);
+            formData.append('contract_type', contractType);
+            formData.append('jurisdiction', jurisdiction);
+            formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+            // Disable submit button and show loading state
+            submitBtn.disabled = true;
+            showNotification('Uploading contract...', 'loading');
+
+            // Send AJAX request
+            fetch('{% url "upload-contract" %}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.message || `HTTP error! status: ${response.status}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    showNotification(data.message, 'success');
+                    // Reset form
+                    document.getElementById('contract-form').reset();
+                    // Redirect to view contracts after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '{% url "view-contracts" %}';
+                    }, 2000);
+                } else {
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification(error.message || 'An error occurred while uploading the contract', 'error');
+            })
+            .finally(() => {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+            });
+        });
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+
+            // Auto-hide notification after 5 seconds (except loading)
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 5000);
+            }
+        }
+
+        // Optional: Display file name when file is selected
+        document.getElementById('contract-file').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || '';
+            if (fileName) {
+                const fileInfo = document.getElementById('file-info');
+                fileInfo.textContent = `Selected: ${fileName}`;
+            }
+        });
+    </script>
 </body>
 </html>
