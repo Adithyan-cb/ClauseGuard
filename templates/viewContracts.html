@@ -270,7 +270,7 @@
             <div class="profile-img">
                 <i class="fas fa-user"></i>
             </div>
-            <div class="user-name">John Doe</div>
+            <div class="user-name">{% if request.user.is_authenticated %}{{request.user.username}}{% endif %}</div>
             <div class="user-role">Standard User</div>
         </div>
 
@@ -314,8 +314,8 @@
 
         <div class="contracts-container">
             <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Search contracts...">
-                <button class="search-btn">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search contracts...">
+                <button class="search-btn" onclick="searchContracts()">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -324,72 +324,87 @@
                 <thead>
                     <tr>
                         <th>Contract ID</th>
-                        <th>Title</th>
                         <th>Type</th>
-                        <th>Date</th>
-                        <th>Status</th>
+                        <th>Jurisdiction</th>
+                        <th>Upload Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>#CT001</td>
-                        <td>Service Agreement</td>
-                        <td>Service</td>
-                        <td>2023-07-15</td>
-                        <td><span class="status approved">Approved</span></td>
-                        <td>
-                            <button class="action-btn view">View</button>
-                            <button class="action-btn download">Download</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#CT002</td>
-                        <td>Employment Contract</td>
-                        <td>Employment</td>
-                        <td>2023-08-01</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td>
-                            <button class="action-btn view">View</button>
-                            <button class="action-btn download">Download</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#CT003</td>
-                        <td>Partnership Agreement</td>
-                        <td>Partnership</td>
-                        <td>2023-08-10</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td>
-                            <button class="action-btn view">View</button>
-                            <button class="action-btn download">Download</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#CT004</td>
-                        <td>Non-Disclosure Agreement</td>
-                        <td>NDA</td>
-                        <td>2023-06-20</td>
-                        <td><span class="status approved">Approved</span></td>
-                        <td>
-                            <button class="action-btn view">View</button>
-                            <button class="action-btn download">Download</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#CT005</td>
-                        <td>Vendor Contract</td>
-                        <td>Vendor</td>
-                        <td>2023-05-12</td>
-                        <td><span class="status rejected">Rejected</span></td>
-                        <td>
-                            <button class="action-btn view">View</button>
-                            <button class="action-btn download">Download</button>
-                        </td>
-                    </tr>
+                    {% if contracts %}
+                        {% for contract in contracts %}
+                        <tr>
+                            <td>#CT{{ contract.id }}</td>
+                            <td>{{ contract.contract_type }}</td>
+                            <td>{{ contract.jurisdiction }}</td>
+                            <td>{{ contract.uploaded_at|date:"Y-m-d" }}</td>
+                            <td>
+                                <button class="action-btn view" onclick="viewContract({{ contract.id }})">View</button>
+                                <button class="action-btn download" onclick="downloadContract({{ contract.id }})">Download</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 30px; color: #999;">
+                                <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                                <p>No contracts found. <a href="{% url 'upload-contract' %}" style="color: #d4af37; text-decoration: none;">Upload your first contract</a></p>
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
     </div>
+
+    <script>
+        function viewContract(contractId) {
+            // Open contract in a new tab/window
+            const viewUrl = `{% url 'view-contract' contract_id=0 %}`.replace('0', contractId);
+            window.open(viewUrl, '_blank');
+        }
+
+        function downloadContract(contractId) {
+            // Trigger download of the contract
+            const downloadUrl = `{% url 'download-contract' contract_id=0 %}`.replace('0', contractId);
+            window.location.href = downloadUrl;
+        }
+
+        function searchContracts() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const tableRows = document.querySelectorAll('.contracts-table tbody tr');
+            
+            tableRows.forEach(row => {
+                // Skip the "no contracts" message row
+                if (row.querySelector('td[colspan="5"]')) {
+                    return;
+                }
+                
+                // Get the text content of all cells in the row
+                const rowText = row.textContent.toLowerCase();
+                
+                // Show/hide row based on whether it matches the search
+                if (rowText.includes(searchInput)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Allow search on Enter key
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function(event) {
+                    if (event.key === 'Enter') {
+                        searchContracts();
+                    }
+                });
+                // Also search as user types (real-time search)
+                searchInput.addEventListener('input', searchContracts);
+            }
+        });
+    </script>
 </body>
 </html>

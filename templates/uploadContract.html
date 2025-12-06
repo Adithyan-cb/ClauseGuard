@@ -378,7 +378,7 @@
             <div class="profile-img">
                 <i class="fas fa-user"></i>
             </div>
-            <div class="user-name">John Doe</div>
+            <div class="user-name">{% if request.user.is_authenticated %}{{request.user.username}}{% endif %}</div>
             <div class="user-role">Standard User</div>
         </div>
 
