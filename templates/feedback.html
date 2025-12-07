@@ -352,6 +352,22 @@
     </div>
 
     <script>
+        // Get CSRF token from cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const feedbackForm = document.getElementById('feedback-form');
             const stars = document.querySelectorAll('.star');
@@ -407,26 +423,70 @@
 
                 // Validate rating
                 if (ratingValue.value === '0') {
-                    alert('Please provide a rating');
+                    notificationText.textContent = 'Please provide a rating';
+                    notification.classList.add('show');
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 3000);
                     return;
                 }
 
-                // Show notification
-                notificationText.textContent = 'Feedback submitted successfully!';
-                notification.classList.add('show');
+                // Get form data
+                const category = document.getElementById('feedback-category').value;
+                const rating = ratingValue.value;
+                const message = document.getElementById('feedback-details').value;
+                const email = document.getElementById('feedback-email').value;
 
-                // Reset form
-                feedbackForm.reset();
-                ratingValue.value = '0';
-                stars.forEach(s => {
-                    s.classList.remove('active');
-                    s.style.color = '#ddd';
+                // Create FormData for AJAX request
+                const formData = new FormData();
+                formData.append('category', category);
+                formData.append('rating', rating);
+                formData.append('message', message);
+                formData.append('email', email);
+                formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+
+                // Send AJAX request
+                fetch('{% url "send-feedback" %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        notificationText.textContent = data.message;
+                        notification.classList.add('show');
+
+                        // Reset form
+                        feedbackForm.reset();
+                        ratingValue.value = '0';
+                        stars.forEach(s => {
+                            s.classList.remove('active');
+                            s.style.color = '#ddd';
+                        });
+
+                        // Hide notification after 3 seconds
+                        setTimeout(() => {
+                            notification.classList.remove('show');
+                        }, 3000);
+                    } else {
+                        notificationText.textContent = 'Error: ' + data.message;
+                        notification.classList.add('show');
+                        setTimeout(() => {
+                            notification.classList.remove('show');
+                        }, 3000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    notificationText.textContent = 'An error occurred. Please try again.';
+                    notification.classList.add('show');
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 3000);
                 });
-
-                // Hide notification after 3 seconds
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
             });
         });
     </script>
