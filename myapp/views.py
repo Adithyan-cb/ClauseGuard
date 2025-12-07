@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
-from .models import Contract
+from .models import Contract, Complaint, Feedback
 #import PyPDF2
 import os
 import logging
@@ -236,8 +236,108 @@ def download_contract(request, contract_id):
 
 @login_required(login_url='login')
 def send_complaint(request):
+    if request.method == 'POST':
+        try:
+            # Get the complaint data from AJAX request
+            subject = request.POST.get('subject')
+            category = request.POST.get('category')
+            priority = request.POST.get('priority')
+            message = request.POST.get('message')
+
+            # Validate that all required fields are filled
+            if not all([subject, category, priority, message]):
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Please fill in all required fields.'
+                }, status=400)
+
+            # Validate priority value
+            valid_priorities = ['low', 'medium', 'high']
+            if priority not in valid_priorities:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Invalid priority level.'
+                }, status=400)
+
+            # Create and save the Complaint object
+            complaint = Complaint(
+                user=request.user,
+                subject=subject,
+                category=category,
+                priority=priority,
+                message=message
+            )
+            complaint.save()
+
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Complaint submitted successfully! Our team will review it soon.',
+                'complaint_id': complaint.id
+            }, status=201)
+
+        except Exception as e:
+            logging.error(f"Error submitting complaint: {str(e)}")
+            return JsonResponse({
+                'status': 'error',
+                'message': f'An error occurred: {str(e)}'
+            }, status=500)
+    
+    # GET request - show the complaint form
     return render(request,'complaint.html')
 
 @login_required(login_url='login')
 def feedback(request):
+    if request.method == 'POST':
+        try:
+            # Get the feedback data from AJAX request
+            category = request.POST.get('category')
+            rating = request.POST.get('rating')
+            message = request.POST.get('message')
+            email = request.POST.get('email')
+
+            # Validate that all required fields are filled
+            if not all([category, rating, message]):
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Please fill in all required fields.'
+                }, status=400)
+
+            # Validate rating value
+            try:
+                rating_int = int(rating)
+                if rating_int < 1 or rating_int > 5:
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'Rating must be between 1 and 5.'
+                    }, status=400)
+            except ValueError:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Invalid rating value.'
+                }, status=400)
+
+            # Create and save the Feedback object
+            feedback_obj = Feedback(
+                user=request.user,
+                category=category,
+                rating=rating_int,
+                message=message,
+                date=str(__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            )
+            feedback_obj.save()
+
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Feedback submitted successfully! Thank you for your input.',
+                'feedback_id': feedback_obj.id
+            }, status=201)
+
+        except Exception as e:
+            logging.error(f"Error submitting feedback: {str(e)}")
+            return JsonResponse({
+                'status': 'error',
+                'message': f'An error occurred: {str(e)}'
+            }, status=500)
+    
+    # GET request - show the feedback form
     return render(request,'feedback.html')
