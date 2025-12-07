@@ -63,11 +63,23 @@ class Clause(models.Model):
 
 
 class Complaint(models.Model):
+    class PriorityLevel(models.TextChoices):
+        LOW = "low", "Low"
+        MEDIUM = "medium", "Medium"
+        HIGH = "high", "High"
+
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="complaints"
+    )
+    subject = models.CharField(max_length=200,null=True,blank=True )
+    category = models.CharField(max_length=50,null=True,blank=True )
+    priority = models.CharField(
+        max_length=10,
+        choices=PriorityLevel.choices,
+        default=PriorityLevel.MEDIUM,
     )
     message = models.TextField()
     admin_reply = models.TextField(blank=True, null=True)
@@ -86,8 +98,7 @@ class Feedback(models.Model):
         related_name="feedbacks"
     )
     date = models.CharField(max_length=100)
-
-
+    category = models.CharField(max_length=50, null=True, blank=True)
     rating = models.IntegerField()
     message = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
