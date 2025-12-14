@@ -347,43 +347,12 @@
                                 <th>User ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Role</th>
                                 <th>Join Date</th>
-                                <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="users-tbody">
                             <tr>
-                                <td>#USR001</td>
-                                <td>Alex Thompson</td>
-                                <td>alex.t@example.com</td>
-                                <td>Standard User</td>
-                                <td>2023-05-15</td>
-                                <td><span class="status active">Active</span></td>
-                            </tr>
-                            <tr>
-                                <td>#USR002</td>
-                                <td>Jessica Williams</td>
-                                <td>jess.w@example.com</td>
-                                <td>Premium User</td>
-                                <td>2023-06-22</td>
-                                <td><span class="status active">Active</span></td>
-                            </tr>
-                            <tr>
-                                <td>#USR003</td>
-                                <td>David Miller</td>
-                                <td>david.m@example.com</td>
-                                <td>Standard User</td>
-                                <td>2023-07-10</td>
-                                <td><span class="status pending">Suspended</span></td>
-                            </tr>
-                            <tr>
-                                <td>#USR004</td>
-                                <td>Lisa Anderson</td>
-                                <td>lisa.a@example.com</td>
-                                <td>Admin</td>
-                                <td>2023-04-05</td>
-                                <td><span class="status active">Active</span></td>
+                                <td colspan="4" style="text-align: center; padding: 20px; color: #7f8c8d;">Loading users...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -514,8 +483,45 @@
                     // Update section title
                     const sectionName = this.querySelector('span').textContent;
                     sectionTitle.textContent = sectionName;
+
+                    // Load users data if users section is clicked
+                    if (sectionId === 'users') {
+                        loadUsers();
+                    }
                 });
             });
+
+            // Function to load users via AJAX
+            function loadUsers() {
+                fetch('/api/get-users/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const usersTbody = document.getElementById('users-tbody');
+                        
+                        if (data.status === 'success' && data.users.length > 0) {
+                            usersTbody.innerHTML = '';
+                            data.users.forEach(user => {
+                                const userIdFormatted = '#USR' + String(user.id).padStart(3, '0');
+                                const fullName = (user.first_name + ' ' + user.last_name).trim() || user.username;
+                                const row = `
+                                    <tr>
+                                        <td>${userIdFormatted}</td>
+                                        <td>${fullName}</td>
+                                        <td>${user.email}</td>
+                                        <td>${user.date_joined}</td>
+                                    </tr>
+                                `;
+                                usersTbody.innerHTML += row;
+                            });
+                        } else {
+                            usersTbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #7f8c8d;">No users found</td></tr>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading users:', error);
+                        document.getElementById('users-tbody').innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #e74c3c;">Error loading users</td></tr>';
+                    });
+            }
 
             // Logout functionality
             logoutBtn.addEventListener('click', function() {

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home,login_user,register,admin_dashboard,user_dashboard,view_contracts,upload_contract,send_complaint,feedback,user_logout,view_contract,download_contract
+from .views import home,login_user,register,admin_dashboard,user_dashboard,view_contracts,upload_contract,send_complaint,feedback,user_logout,view_contract,download_contract,get_users_ajax
 urlpatterns = [
    path('',home,name='home'),
    path('login/',login_user,name="login"),
@@ -13,4 +13,5 @@ urlpatterns = [
    path('logout/',user_logout,name='logout'),
    path('contract/<int:contract_id>/view/', view_contract, name='view-contract'),
    path('contract/<int:contract_id>/download/', download_contract, name='download-contract'),
+   path('api/get-users/', get_users_ajax, name='get-users-ajax'),
 ]
