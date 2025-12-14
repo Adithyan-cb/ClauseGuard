@@ -87,6 +87,9 @@ def register(request):
 
 @login_required(login_url='login')
 def admin_dashboard(request):
+    # Check if user is an admin (staff member)
+    if not request.user.is_staff:
+        return redirect('user-dashboard')
     return render(request,'admin.html')
 
 @login_required(login_url='login')
@@ -341,3 +344,29 @@ def feedback(request):
     
     # GET request - show the feedback form
     return render(request,'feedback.html')
+
+@login_required(login_url='login')
+def get_users_ajax(request):
+    """Return users as JSON for AJAX request"""
+    try:
+        users = User.objects.all().order_by('-date_joined')
+        users_data = []
+        for user in users:
+            users_data.append({
+                'id': user.id,
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'date_joined': user.date_joined.strftime('%Y-%m-%d')
+            })
+        return JsonResponse({
+            'status': 'success',
+            'users': users_data
+        })
+    except Exception as e:
+        logging.error(f"Error fetching users: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': f'An error occurred: {str(e)}'
+        }, status=500)
