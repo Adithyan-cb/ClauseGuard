@@ -290,46 +290,22 @@
 
         <div id="legal-contacts" class="content-section">
             <div class="content-card">
-                <h3>Legal Contact Directory</h3>
+                <h3>Uploaded Contracts</h3>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Position</th>
-                                <th>Department</th>
-                                <th>Contact</th>
-                                <th>Status</th>
+                                <th>Contract ID</th>
+                                <th>User</th>
+                                <th>Type</th>
+                                <th>Jurisdiction</th>
+                                <th>LLM Model</th>
+                                <th>Upload Date</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="contracts-tbody">
                             <tr>
-                                <td>John Smith</td>
-                                <td>Legal Advisor</td>
-                                <td>Corporate Law</td>
-                                <td>john.smith@example.com</td>
-                                <td><span class="status active">Active</span></td>
-                            </tr>
-                            <tr>
-                                <td>Sarah Johnson</td>
-                                <td>Senior Counsel</td>
-                                <td>Compliance</td>
-                                <td>sarah.j@example.com</td>
-                                <td><span class="status active">Active</span></td>
-                            </tr>
-                            <tr>
-                                <td>Michael Chen</td>
-                                <td>Legal Representative</td>
-                                <td>Intellectual Property</td>
-                                <td>m.chen@example.com</td>
-                                <td><span class="status pending">On Leave</span></td>
-                            </tr>
-                            <tr>
-                                <td>Emily Rodriguez</td>
-                                <td>Contract Specialist</td>
-                                <td>Procurement</td>
-                                <td>emily.r@example.com</td>
-                                <td><span class="status active">Active</span></td>
+                                <td colspan="6" style="text-align: center; padding: 20px; color: #7f8c8d;">Loading contracts...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -367,46 +343,19 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Complaint ID</th>
-                                <th>User</th>
                                 <th>Subject</th>
-                                <th>Date Filed</th>
+                                <th>Category</th>
                                 <th>Priority</th>
-                                <th>Status</th>
+                                <th>Message</th>
+                                <th>Admin Reply</th>
+                                <th>Created At</th>
+                                <th>Replied At</th>
+                                <th>User ID</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="complaints-tbody">
                             <tr>
-                                <td>#CMP001</td>
-                                <td>Alex Thompson</td>
-                                <td>Payment Issue</td>
-                                <td>2023-08-15</td>
-                                <td>High</td>
-                                <td><span class="status pending">In Progress</span></td>
-                            </tr>
-                            <tr>
-                                <td>#CMP002</td>
-                                <td>Jessica Williams</td>
-                                <td>Account Access</td>
-                                <td>2023-08-18</td>
-                                <td>Medium</td>
-                                <td><span class="status resolved">Resolved</span></td>
-                            </tr>
-                            <tr>
-                                <td>#CMP003</td>
-                                <td>Robert Davis</td>
-                                <td>Service Quality</td>
-                                <td>2023-08-20</td>
-                                <td>Medium</td>
-                                <td><span class="status pending">In Progress</span></td>
-                            </tr>
-                            <tr>
-                                <td>#CMP004</td>
-                                <td>Maria Garcia</td>
-                                <td>Billing Dispute</td>
-                                <td>2023-08-22</td>
-                                <td>High</td>
-                                <td><span class="status pending">In Progress</span></td>
+                                <td colspan="8" style="text-align: center; padding: 20px; color: #7f8c8d;">Loading complaints...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -417,33 +366,24 @@
         <div id="feedback" class="content-section" style="display: none;">
             <div class="content-card">
                 <h3>User Feedback</h3>
-                <div class="feedback-item">
-                    <div class="feedback-header">
-                        <span class="feedback-author">Alex Thompson</span>
-                        <span class="feedback-date">2023-08-25</span>
-                    </div>
-                    <p>The new dashboard interface is intuitive and easy to navigate. Great job on the redesign!</p>
-                </div>
-                <div class="feedback-item">
-                    <div class="feedback-header">
-                        <span class="feedback-author">Jessica Williams</span>
-                        <span class="feedback-date">2023-08-24</span>
-                    </div>
-                    <p>I'm experiencing some delays when loading reports. It would be great if this could be optimized.</p>
-                </div>
-                <div class="feedback-item">
-                    <div class="feedback-header">
-                        <span class="feedback-author">Robert Davis</span>
-                        <span class="feedback-date">2023-08-23</span>
-                    </div>
-                    <p>The customer support team was very helpful in resolving my issue. Keep up the good work!</p>
-                </div>
-                <div class="feedback-item">
-                    <div class="feedback-header">
-                        <span class="feedback-author">Maria Garcia</span>
-                        <span class="feedback-date">2023-08-22</span>
-                    </div>
-                    <p>It would be helpful to have a mobile app version of this platform for on-the-go access.</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Rating</th>
+                                <th>Message</th>
+                                <th>Created At</th>
+                                <th>User ID</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feedback-tbody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 20px; color: #7f8c8d;">Loading feedback...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -488,6 +428,21 @@
                     if (sectionId === 'users') {
                         loadUsers();
                     }
+
+                    // Load contracts data if legal-contacts section is clicked
+                    if (sectionId === 'legal-contacts') {
+                        loadContracts();
+                    }
+
+                    // Load complaints data if complaints section is clicked
+                    if (sectionId === 'complaints') {
+                        loadComplaints();
+                    }
+
+                    // Load feedback data if feedback section is clicked
+                    if (sectionId === 'feedback') {
+                        loadFeedback();
+                    }
                 });
             });
 
@@ -520,6 +475,105 @@
                     .catch(error => {
                         console.error('Error loading users:', error);
                         document.getElementById('users-tbody').innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #e74c3c;">Error loading users</td></tr>';
+                    });
+            }
+
+            // Function to load contracts via AJAX
+            function loadContracts() {
+                fetch('/api/get-contracts/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const contractsTbody = document.getElementById('contracts-tbody');
+                        
+                        if (data.status === 'success' && data.contracts.length > 0) {
+                            contractsTbody.innerHTML = '';
+                            data.contracts.forEach(contract => {
+                                const contractIdFormatted = '#CTR' + String(contract.id).padStart(3, '0');
+                                const row = `
+                                    <tr>
+                                        <td>${contractIdFormatted}</td>
+                                        <td>${contract.user}</td>
+                                        <td>${contract.contract_type}</td>
+                                        <td>${contract.jurisdiction}</td>
+                                        <td>${contract.llm_model}</td>
+                                        <td>${contract.uploaded_at}</td>
+                                    </tr>
+                                `;
+                                contractsTbody.innerHTML += row;
+                            });
+                        } else {
+                            contractsTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #7f8c8d;">No contracts found</td></tr>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading contracts:', error);
+                        document.getElementById('contracts-tbody').innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #e74c3c;">Error loading contracts</td></tr>';
+                    });
+            }
+
+            // Function to load complaints via AJAX
+            function loadComplaints() {
+                fetch('/api/get-complaints/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const complaintsTbody = document.getElementById('complaints-tbody');
+                        
+                        if (data.status === 'success' && data.complaints.length > 0) {
+                            complaintsTbody.innerHTML = '';
+                            data.complaints.forEach(complaint => {
+                                const row = `
+                                    <tr>
+                                        <td>${complaint.subject || 'N/A'}</td>
+                                        <td>${complaint.category || 'N/A'}</td>
+                                        <td>${complaint.priority || 'N/A'}</td>
+                                        <td>${complaint.message || 'N/A'}</td>
+                                        <td>${complaint.admin_reply || 'Pending'}</td>
+                                        <td>${complaint.created_at}</td>
+                                        <td>${complaint.replied_at || 'N/A'}</td>
+                                        <td>${complaint.user_id}</td>
+                                    </tr>
+                                `;
+                                complaintsTbody.innerHTML += row;
+                            });
+                        } else {
+                            complaintsTbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #7f8c8d;">No complaints found</td></tr>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading complaints:', error);
+                        document.getElementById('complaints-tbody').innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #e74c3c;">Error loading complaints</td></tr>';
+                    });
+            }
+
+            // Function to load feedback via AJAX
+            function loadFeedback() {
+                fetch('/api/get-feedback/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const feedbackTbody = document.getElementById('feedback-tbody');
+                        
+                        if (data.status === 'success' && data.feedbacks.length > 0) {
+                            feedbackTbody.innerHTML = '';
+                            data.feedbacks.forEach(feedback => {
+                                const row = `
+                                    <tr>
+                                        <td>${feedback.date || 'N/A'}</td>
+                                        <td>${feedback.category || 'N/A'}</td>
+                                        <td>${feedback.rating || 'N/A'}</td>
+                                        <td>${feedback.message || 'N/A'}</td>
+                                        <td>${feedback.created_at}</td>
+                                        <td>${feedback.user_id}</td>
+                                    </tr>
+                                `;
+                                feedbackTbody.innerHTML += row;
+                            });
+                        } else {
+                            feedbackTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #7f8c8d;">No feedback found</td></tr>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading feedback:', error);
+                        document.getElementById('feedback-tbody').innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #e74c3c;">Error loading feedback</td></tr>';
                     });
             }
 
