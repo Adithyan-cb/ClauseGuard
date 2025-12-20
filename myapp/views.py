@@ -370,3 +370,84 @@ def get_users_ajax(request):
             'status': 'error',
             'message': f'An error occurred: {str(e)}'
         }, status=500)
+
+@login_required(login_url='login')
+def get_contracts_ajax(request):
+    """Return all contracts as JSON for AJAX request"""
+    try:
+        contracts = Contract.objects.all().order_by('-uploaded_at')
+        contracts_data = []
+        for contract in contracts:
+            contracts_data.append({
+                'id': contract.id,
+                'user': contract.user.username,
+                'contract_type': contract.contract_type,
+                'jurisdiction': contract.jurisdiction,
+                'llm_model': contract.llm_model,
+                'uploaded_at': contract.uploaded_at.strftime('%Y-%m-%d')
+            })
+        return JsonResponse({
+            'status': 'success',
+            'contracts': contracts_data
+        })
+    except Exception as e:
+        logging.error(f"Error fetching contracts: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': f'An error occurred: {str(e)}'
+        }, status=500)
+
+@login_required(login_url='login')
+def get_complaints_ajax(request):
+    """Return all complaints as JSON for AJAX request"""
+    try:
+        complaints = Complaint.objects.all().order_by('-created_at')
+        complaints_data = []
+        for complaint in complaints:
+            complaints_data.append({
+                'id': complaint.id,
+                'subject': complaint.subject,
+                'category': complaint.category,
+                'priority': complaint.priority,
+                'message': complaint.message,
+                'admin_reply': complaint.admin_reply or '',
+                'created_at': complaint.created_at.strftime('%Y-%m-%d'),
+                'replied_at': complaint.replied_at.strftime('%Y-%m-%d') if complaint.replied_at else '',
+                'user_id': complaint.user.id
+            })
+        return JsonResponse({
+            'status': 'success',
+            'complaints': complaints_data
+        })
+    except Exception as e:
+        logging.error(f"Error fetching complaints: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': f'An error occurred: {str(e)}'
+        }, status=500)
+
+@login_required(login_url='login')
+def get_feedback_ajax(request):
+    """Return all feedback as JSON for AJAX request"""
+    try:
+        feedbacks = Feedback.objects.all().order_by('-created_at')
+        feedbacks_data = []
+        for feedback in feedbacks:
+            feedbacks_data.append({
+                'date': feedback.date,
+                'category': feedback.category,
+                'rating': feedback.rating,
+                'message': feedback.message,
+                'created_at': feedback.created_at.strftime('%Y-%m-%d'),
+                'user_id': feedback.user.id
+            })
+        return JsonResponse({
+            'status': 'success',
+            'feedbacks': feedbacks_data
+        })
+    except Exception as e:
+        logging.error(f"Error fetching feedbacks: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': f'An error occurred: {str(e)}'
+        }, status=500)
