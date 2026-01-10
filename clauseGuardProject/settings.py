@@ -18,6 +18,23 @@ from django.conf.global_settings import STATICFILES_DIRS
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from .env (project root)
+try:
+    from dotenv import load_dotenv
+    load_dotenv(dotenv_path=BASE_DIR / '.env')
+except Exception:
+    # python-dotenv is optional in environments where env vars are provided externally
+    pass
+
+# Allow overriding DEBUG via environment (defaults to False for safety)
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('1', 'true', 'yes')
+
+# Contract analysis / RAG configuration
+GROQ_API_KEY = os.getenv('GROQ_API_KEY', '')
+CONTRACT_ANALYSIS_TIMEOUT = int(os.getenv('CONTRACT_ANALYSIS_TIMEOUT', '300'))
+CONTRACT_MAX_FILE_SIZE = int(os.getenv('CONTRACT_MAX_FILE_SIZE', '10485760'))
+CHROMA_DATA_DIR = os.getenv('CHROMA_DATA_DIR', str(BASE_DIR / 'chroma_data'))
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -26,7 +43,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-eis_q@cmt&wx(a+n7jmbmlwc^^su+i#l=jr)i5f#1vv)y*hpe-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -90,23 +106,23 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',  # SQLite database file will be created here
     # }
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ClauseGuard_DB',
-        'USER': 'django_user',
-        'PASSWORD': 'adhi123',
-        'HOST': 'localhost',
-        'PORT': 3306,
-    }
     # 'default': {
     #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'clauseGuard',
-    #     'USER': 'root',
-    #     'PASSWORD': 'root',
+    #     'NAME': 'ClauseGuard_DB',
+    #     'USER': 'django_user',
+    #     'PASSWORD': 'adhi123',
     #     'HOST': 'localhost',
     #     'PORT': 3306,
-
     # }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'clauseGuard',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': 3306,
+
+    }
     #  'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',  # SQLite database file will be created h
