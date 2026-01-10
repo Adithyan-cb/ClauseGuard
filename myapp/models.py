@@ -22,14 +22,31 @@ class ContractAnalysis(models.Model):
         on_delete=models.CASCADE,
         related_name="analysis",
     )
-    summary = models.TextField()
-    risks = models.TextField()
-    suggestions = models.TextField()
-    comparison_result = models.TextField()
+    # JSON/text blobs stored as text (Pydantic-validated before save)
+    summary = models.TextField(blank=True, null=True)
+    clauses = models.TextField(blank=True, null=True)
+    risks = models.TextField(blank=True, null=True)
+    suggestions = models.TextField(blank=True, null=True)
+    comparison_result = models.TextField(blank=True, null=True)
+
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('processing', 'Processing'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+    ]
+
+    extraction_status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending'
+    )
+    error_message = models.TextField(blank=True, null=True)
+    processing_time = models.FloatField(null=True, blank=True)
     analysed_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Analysis for Contract {self.contract.id}"
+        return f"Analysis for Contract {self.contract.id} (status={self.extraction_status})"
 
 
 class Clause(models.Model):
@@ -45,6 +62,7 @@ class Clause(models.Model):
         on_delete=models.CASCADE,
         related_name="clauses",
     )
+    clause_type = models.CharField(max_length=100, blank=True)
     clause_text = models.TextField()  # longtext equivalent
     risk_level = models.CharField(
         max_length=10,
@@ -55,6 +73,7 @@ class Clause(models.Model):
     suggestions = models.TextField(blank=True, null=True)
     similarity_score = models.FloatField(default=0.0)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Clause {self.id} (Contract {self.contract.id})"
