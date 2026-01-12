@@ -43,6 +43,11 @@ db.sqlite3-journal
 /media
 /staticfiles
 
+# ChromaDB Vector Database
+chroma_data/
+chroma.sqlite3
+*.db
+
 # Environment variables
 .env
 .env.local
