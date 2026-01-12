@@ -6,7 +6,6 @@ Uses ChromaDB for efficient semantic similarity search.
 """
 
 import chromadb
-from chromadb.config import Settings
 import os
 import logging
 from django.conf import settings as django_settings
@@ -49,14 +48,9 @@ class ChromaManager:
             # Create directory if it doesn't exist
             os.makedirs(persist_dir, exist_ok=True)
             
-            # Initialize ChromaDB client with persistent storage
-            self.client = chromadb.Client(
-                Settings(
-                    chroma_db_impl="duckdb+parquet",
-                    persist_directory=persist_dir,
-                    anonymized_telemetry=False,
-                )
-            )
+            # Initialize ChromaDB client with persistent storage using new API
+            # Use PersistentClient for persistent storage (non-deprecated way)
+            self.client = chromadb.PersistentClient(path=persist_dir)
             
             logger.info(f"ChromaDB initialized with storage at: {persist_dir}")
             
