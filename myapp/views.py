@@ -451,3 +451,277 @@ def get_feedback_ajax(request):
             'status': 'error',
             'message': f'An error occurred: {str(e)}'
         }, status=500)
+
+
+# ============================================================================
+# PHASE 6: CONTRACT ANALYSIS API ENDPOINTS
+# ============================================================================
+
+from .services import ContractAnalysisService
+from .models import ContractAnalysis
+import json
+import asyncio
+from threading import Thread
+
+logger = logging.getLogger(__name__)
+
+
+@login_required(login_url='login')
+@require_http_methods(["POST"])
+@csrf_protect
+def upload_and_analyze_contract(request):
+    """
+    Endpoint: POST /api/upload-contract/
+    
+    Upload a PDF contract and start analysis.
+    
+    Form Data:
+        - contract_file: PDF file
+        - contract_type: Type like "SERVICE_AGREEMENT_INDIA"
+        - jurisdiction: "INDIA"
+        - llm_model: "mixtral-8x7b-32768"
+    
+    Response:
+        {
+            "status": "success",
+            "contract_id": 1,
+            "analysis_id": 1,
+            "message": "Contract uploaded and analysis started"
+        }
+    """
+    try:
+        # Get form data
+        contract_file = request.FILES.get('contract_file')
+        contract_type = request.POST.get('contract_type', '')
+        jurisdiction = request.POST.get('jurisdiction', 'INDIA')
+        llm_model = request.POST.get('llm_model', 'mixtral-8x7b-32768')
+        
+        # Validate inputs
+        if not contract_file:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'No contract file provided'
+            }, status=400)
+        
+        if not contract_type:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Contract type is required'
+            }, status=400)
+        
+        # Validate file is PDF
+        if not contract_file.name.lower().endswith('.pdf'):
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Only PDF files are allowed'
+            }, status=400)
+        
+        # Check file size (max 10MB)
+        max_size = 10 * 1024 * 1024
+        if contract_file.size > max_size:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'File size exceeds 10MB limit'
+            }, status=400)
+        
+        logger.info(f"Starting contract analysis for user {request.user.username}")
+        logger.info(f"Contract type: {contract_type}, Jurisdiction: {jurisdiction}")
+        
+        # Initialize analysis service
+        service = ContractAnalysisService()
+        
+        # Start analysis in background thread to avoid timeout
+        def run_analysis():
+            try:
+                result = service.analyze_contract(
+                    contract_file=contract_file,
+                    contract_type=contract_type,
+                    jurisdiction=jurisdiction,
+                    llm_model=llm_model,
+                    user=request.user
+                )
+                logger.info(f"Analysis completed: {result['analysis_id']}")
+            except Exception as e:
+                logger.error(f"Error in background analysis: {str(e)}", exc_info=True)
+        
+        # Run in background thread
+        analysis_thread = Thread(target=run_analysis, daemon=True)
+        analysis_thread.start()
+        
+        # Immediately create analysis record to get ID
+        contract = Contract.objects.create(
+            user=request.user,
+            contract_file=contract_file,
+            contract_type=contract_type,
+            jurisdiction=jurisdiction,
+            llm_model=llm_model
+        )
+        
+        contract_analysis = ContractAnalysis.objects.create(
+            contract=contract,
+            extraction_status='processing'
+        )
+        
+        return JsonResponse({
+            'status': 'success',
+            'contract_id': contract.id,
+            'analysis_id': contract_analysis.id,
+            'message': 'Contract uploaded and analysis started'
+        })
+    
+    except Exception as e:
+        logger.error(f"Error uploading contract: {str(e)}", exc_info=True)
+        return JsonResponse({
+            'status': 'error',
+            'message': f'Error uploading contract: {str(e)}'
+        }, status=500)
+
+
+@login_required(login_url='login')
+@require_http_methods(["GET"])
+def get_analysis_results(request, analysis_id):
+    """
+    Endpoint: GET /api/analysis/<analysis_id>/
+    
+    Get analysis results and status.
+    Frontend polls this endpoint to check if analysis is complete.
+    
+    Response:
+        {
+            "status": "success",
+            "data": {
+                "analysis_status": "completed" | "processing" | "pending" | "failed",
+                "summary": {...},
+                "clauses": {...},
+                "risks": {...},
+                "suggestions": {...},
+                "processing_time": 45.3,
+                "error_message": null
+            }
+        }
+    """
+    try:
+        # Get analysis record
+        contract_analysis = get_object_or_404(ContractAnalysis, id=analysis_id)
+        
+        # Check permissions - user can only see their own analyses
+        if contract_analysis.contract.user != request.user:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Permission denied'
+            }, status=403)
+        
+        # Parse JSON fields
+        summary = {}
+        clauses = {}
+        risks = {}
+        suggestions = {}
+        
+        if contract_analysis.summary:
+            try:
+                summary = json.loads(contract_analysis.summary)
+            except json.JSONDecodeError:
+                logger.warning(f"Invalid JSON in summary for analysis {analysis_id}")
+        
+        if contract_analysis.clauses:
+            try:
+                clauses = json.loads(contract_analysis.clauses)
+            except json.JSONDecodeError:
+                logger.warning(f"Invalid JSON in clauses for analysis {analysis_id}")
+        
+        if contract_analysis.risks:
+            try:
+                risks = json.loads(contract_analysis.risks)
+            except json.JSONDecodeError:
+                logger.warning(f"Invalid JSON in risks for analysis {analysis_id}")
+        
+        if contract_analysis.suggestions:
+            try:
+                suggestions = json.loads(contract_analysis.suggestions)
+            except json.JSONDecodeError:
+                logger.warning(f"Invalid JSON in suggestions for analysis {analysis_id}")
+        
+        return JsonResponse({
+            'status': 'success',
+            'data': {
+                'analysis_status': contract_analysis.extraction_status,
+                'summary': summary,
+                'clauses': clauses,
+                'risks': risks,
+                'suggestions': suggestions,
+                'processing_time': contract_analysis.processing_time,
+                'error_message': contract_analysis.error_message,
+                'analysed_at': contract_analysis.analysed_at.isoformat() if contract_analysis.analysed_at else None
+            }
+        })
+    
+    except ContractAnalysis.DoesNotExist:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Analysis not found'
+        }, status=404)
+    
+    except Exception as e:
+        logger.error(f"Error fetching analysis: {str(e)}", exc_info=True)
+        return JsonResponse({
+            'status': 'error',
+            'message': f'Error fetching analysis: {str(e)}'
+        }, status=500)
+
+
+@login_required(login_url='login')
+@require_http_methods(["GET"])
+def get_user_contracts(request):
+    """
+    Endpoint: GET /api/contracts/
+    
+    Get list of user's uploaded contracts with analysis status.
+    
+    Response:
+        {
+            "status": "success",
+            "contracts": [
+                {
+                    "id": 1,
+                    "name": "Service Agreement",
+                    "type": "SERVICE_AGREEMENT_INDIA",
+                    "uploaded_at": "2026-01-17T10:30:45",
+                    "analysis_status": "completed",
+                    "analysis_id": 1
+                }
+            ]
+        }
+    """
+    try:
+        # Get user's contracts
+        contracts = Contract.objects.filter(user=request.user).order_by('-uploaded_at')
+        
+        contracts_data = []
+        
+        for contract in contracts:
+            # Get latest analysis for this contract
+            latest_analysis = contract.analysis.first()
+            
+            contract_data = {
+                'id': contract.id,
+                'name': contract.contract_file.name.split('/')[-1],  # Get filename
+                'type': contract.contract_type,
+                'jurisdiction': contract.jurisdiction,
+                'uploaded_at': contract.uploaded_at.isoformat(),
+                'llm_model': contract.llm_model,
+                'analysis_status': latest_analysis.extraction_status if latest_analysis else 'pending',
+                'analysis_id': latest_analysis.id if latest_analysis else None
+            }
+            contracts_data.append(contract_data)
+        
+        return JsonResponse({
+            'status': 'success',
+            'contracts': contracts_data
+        })
+    
+    except Exception as e:
+        logger.error(f"Error fetching contracts: {str(e)}", exc_info=True)
+        return JsonResponse({
+            'status': 'error',
+            'message': f'Error fetching contracts: {str(e)}'
+        }, status=500)
