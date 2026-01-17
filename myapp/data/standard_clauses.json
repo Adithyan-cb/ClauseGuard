@@ -1,0 +1,572 @@
+{
+  "SERVICE_AGREEMENT_INDIA": {
+    "contract_type": "Service Agreement",
+    "jurisdiction": "India",
+    "critical_clauses": [
+      {
+        "id": "SA_IND_001",
+        "type": "Scope of Services",
+        "priority": "critical",
+        "description": "Clearly defines the services to be provided by the service provider",
+        "recommendations": "Should be specific, measurable, and time-bound. Include exact deliverables and timelines.",
+        "standard_text": "The Service Provider shall provide the following services as per the specifications outlined in Schedule A: [Detailed service description including deliverables, timelines, and quality standards]. All services shall be performed in accordance with industry best practices and applicable Indian laws."
+      },
+      {
+        "id": "SA_IND_002",
+        "type": "Payment Terms",
+        "priority": "critical",
+        "description": "Specifies payment amount, currency, frequency, and conditions",
+        "recommendations": "Payment terms of 30-45 days are standard for Indian B2B contracts. Consider milestone-based payments for large projects.",
+        "standard_text": "The Client shall pay the Service Provider an amount of [Amount in INR] for the services rendered. Payment shall be due within thirty (30) days of invoice date. Invoices shall be submitted monthly/[as per agreement]. Payment shall be made via [bank transfer/cheque] to the Service Provider's designated account. Late payments shall attract interest at 18% per annum as per applicable law."
+      },
+      {
+        "id": "SA_IND_003",
+        "type": "Term and Termination",
+        "priority": "critical",
+        "description": "Defines contract duration and conditions for termination",
+        "recommendations": "Include notice periods (typically 30-90 days in India), grounds for termination, and wind-down procedures.",
+        "standard_text": "This Agreement shall commence on [Start Date] and shall continue for a period of [Duration] unless terminated earlier. Either party may terminate this Agreement with ninety (90) days' prior written notice. In case of material breach, either party may terminate with thirty (30) days' notice if the breach is not cured within that period. Upon termination, all obligations shall cease except those that survive termination by their nature."
+      },
+      {
+        "id": "SA_IND_004",
+        "type": "Confidentiality",
+        "priority": "critical",
+        "description": "Protects proprietary information shared between parties",
+        "recommendations": "Include clear definition of what is confidential, permitted uses, and duration of confidentiality obligations. Ensure compliance with Indian IT Act, 2000.",
+        "standard_text": "Each party agrees to maintain the confidentiality of all proprietary information and trade secrets disclosed by the other party. Confidential information shall not be disclosed to third parties without prior written consent, except to employees or agents who need to know for performance of obligations. This obligation shall survive termination for a period of [2-3 years]. Permitted disclosures include those required by law or court order, with prior notice to the disclosing party."
+      },
+      {
+        "id": "SA_IND_005",
+        "type": "Intellectual Property Rights",
+        "priority": "critical",
+        "description": "Clarifies ownership of work product, inventions, and creative output",
+        "recommendations": "Specify whether IP is owned by service provider, client, or jointly. Include provisions for pre-existing IP and residual knowledge.",
+        "standard_text": "All intellectual property rights, including but not limited to patents, copyrights, trademarks, and trade secrets, in the work product created during performance of this Agreement shall be owned by [Client/Service Provider/jointly]. Each party retains ownership of its pre-existing intellectual property and residual knowledge. The [receiving party] shall have a limited, non-exclusive license to use the [providing party's] pre-existing IP solely for purposes of this Agreement."
+      },
+      {
+        "id": "SA_IND_006",
+        "type": "Limitation of Liability",
+        "priority": "critical",
+        "description": "Limits damages each party can claim against the other",
+        "recommendations": "Liability cap typically should be 6-12 months of service fees for critical services. Exclude gross negligence, fraud, and willful misconduct.",
+        "standard_text": "Except for breaches of confidentiality or infringement of IP rights, neither party's total liability under this Agreement shall exceed [12 months of service fees / specific amount in INR], unless caused by gross negligence, willful misconduct, or fraud. In no event shall either party be liable for indirect, incidental, consequential, special, or punitive damages, including lost profits or lost data."
+      }
+    ],
+    "important_clauses": [
+      {
+        "id": "SA_IND_007",
+        "type": "Service Level Agreement (SLA)",
+        "priority": "important",
+        "description": "Defines performance standards and remedies for non-performance",
+        "recommendations": "Include uptime guarantees, response times, resolution times. Specify service credits or remedies for SLA breaches.",
+        "standard_text": "The Service Provider warrants the following Service Level: (a) Availability: [99.5%/99.9%] uptime on a monthly basis, measured excluding scheduled maintenance; (b) Response Time: Critical issues shall be acknowledged within [2-4] hours; (c) Resolution Time: Critical issues shall be resolved within [8-24] hours. If SLA targets are not met, the Client shall be entitled to service credits calculated as: [percentage of monthly fees] for each percentage point of SLA miss."
+      },
+      {
+        "id": "SA_IND_008",
+        "type": "Insurance Requirements",
+        "priority": "important",
+        "description": "Specifies required insurance coverage for service provider",
+        "recommendations": "Require professional indemnity insurance for service providers. Minimum coverage typically 3-6 months of annual contract value.",
+        "standard_text": "The Service Provider shall maintain, at its own cost, professional indemnity insurance with a minimum coverage of INR [amount] and general commercial liability insurance with a minimum coverage of INR [amount] throughout the term of this Agreement and for [period] thereafter. Certificate of insurance shall be provided to the Client upon request. Insurance coverage shall not limit the Service Provider's other obligations under this Agreement."
+      },
+      {
+        "id": "SA_IND_009",
+        "type": "Dispute Resolution",
+        "priority": "important",
+        "description": "Process for resolving disputes between parties",
+        "recommendations": "Indian parties typically prefer arbitration. Include escalation procedures and specify arbitrator selection process. Consider ICC or LCIA arbitration.",
+        "standard_text": "Any dispute or difference arising out of or relating to this Agreement shall first be resolved through good faith negotiations between authorized representatives of both parties for a period of thirty (30) days. If not resolved, the dispute shall be referred to binding arbitration under the Arbitration and Conciliation Act, 1996. Arbitration shall be conducted by a single arbitrator selected through mutual agreement. The seat of arbitration shall be [Mumbai/Delhi]. The language of arbitration shall be English. The cost of arbitration shall be borne equally by both parties."
+      },
+      {
+        "id": "SA_IND_010",
+        "type": "Amendment and Modification",
+        "priority": "important",
+        "description": "Procedure for making changes to the agreement",
+        "recommendations": "Require written consent of authorized representatives. Specify effective date of amendments.",
+        "standard_text": "No amendment, modification, or waiver of this Agreement shall be effective unless in writing and signed by authorized representatives of both parties. Any amendment shall specify the effective date and the specific provisions being amended. Administrative changes of non-material nature may be implemented with thirty (30) days' notice."
+      }
+    ],
+    "optional_clauses": [
+      {
+        "id": "SA_IND_011",
+        "type": "Renewal Terms",
+        "priority": "optional",
+        "description": "Conditions for renewing the agreement after expiration",
+        "recommendations": "Specify auto-renewal terms, notice periods, and any changes in terms upon renewal.",
+        "standard_text": "This Agreement shall automatically renew for successive periods of [one year each] unless either party provides written notice of non-renewal at least ninety (90) days before the end of the then-current term. Upon renewal, the terms shall remain the same unless modified in writing by mutual consent. Service fees may be adjusted based on [CPI/mutually agreed upon index] or as otherwise agreed."
+      },
+      {
+        "id": "SA_IND_012",
+        "type": "Data Protection and Security",
+        "priority": "optional",
+        "description": "Measures for protecting personal and confidential data",
+        "recommendations": "Include data localization (India requirement), encryption, access controls, and breach notification requirements.",
+        "standard_text": "The Service Provider shall implement appropriate security measures to protect all data and information provided by the Client. Data shall be stored within India or at locations agreed in writing. All data shall be encrypted in transit and at rest using industry-standard encryption. The Service Provider shall perform daily backups and store backup copies at a separate geographic location. In case of any data breach, the Service Provider shall notify the Client within 24 hours and cooperate fully in investigation and remediation."
+      },
+      {
+        "id": "SA_IND_013",
+        "type": "Compliance with Laws",
+        "priority": "optional",
+        "description": "Commitment to comply with applicable Indian and international laws",
+        "recommendations": "Include compliance with data protection, labor, tax, and industry-specific regulations.",
+        "standard_text": "Both parties shall comply with all applicable laws and regulations including but not limited to the Information Technology Act, 2000, the Personal Data Protection Bill (when enacted), the Indian Contract Act, 1872, and any industry-specific regulations. The Service Provider shall maintain records and documentation as required by law and shall permit audits for compliance verification upon reasonable notice."
+      }
+    ]
+  },
+  "EMPLOYMENT_CONTRACT_INDIA": {
+    "contract_type": "Employment Contract",
+    "jurisdiction": "India",
+    "critical_clauses": [
+      {
+        "id": "EMP_IND_001",
+        "type": "Job Title and Responsibilities",
+        "priority": "critical",
+        "description": "Clearly defines the employee's position and job duties",
+        "recommendations": "Be specific about role, reporting structure, and key responsibilities to avoid disputes.",
+        "standard_text": "The Employee is employed as [Job Title] and shall be responsible for [detailed list of responsibilities]. The Employee shall report to [reporting manager/position]. The Employee's duties may be modified from time to time at the discretion of the Employer with reasonable notice. The Employee shall perform duties with due diligence and in accordance with company policies."
+      },
+      {
+        "id": "EMP_IND_002",
+        "type": "Compensation and Benefits",
+        "priority": "critical",
+        "description": "Details of salary, bonus, allowances, and benefits",
+        "recommendations": "Specify gross and net salary, breakup of components (DA, HRA, special allowances), and tax implications.",
+        "standard_text": "The Employee shall be compensated with a monthly salary of INR [amount], payable on the [last working day/specific date] of each month. The compensation shall comprise: Basic: INR [amount], Dearness Allowance: INR [amount], House Rent Allowance: INR [amount], Special Allowance: INR [amount], and other applicable allowances as per company policy. The Employer shall deduct applicable taxes, PF, ESI, and other statutory deductions. The Employee shall also be entitled to performance-based bonus, applicable allowances, and benefits as per company policy."
+      },
+      {
+        "id": "EMP_IND_003",
+        "type": "Working Hours and Leave",
+        "priority": "critical",
+        "description": "Specifies working hours, leave entitlements, and holidays",
+        "recommendations": "Ensure compliance with Shop and Establishment Act and Industrial Disputes Act. Include statutory leaves and company holidays.",
+        "standard_text": "The Employee shall work [40-48] hours per week, typically [time range] on [days]. The Employee is entitled to the following annual leave: Casual Leave: [12 days], Sick Leave: [6 days], Earned Leave: [as per Industrial Disputes Act]. Additionally, the Employee shall be entitled to all national and company holidays. Leave shall be taken as per company leave policy. Any leave balance may be carried forward [subject to limits] or encashed [as applicable]."
+      },
+      {
+        "id": "EMP_IND_004",
+        "type": "Termination of Employment",
+        "priority": "critical",
+        "description": "Conditions and notice requirements for ending employment",
+        "recommendations": "Comply with Industrial Disputes Act. Include notice periods for both employer and employee, severance terms, and grounds for termination.",
+        "standard_text": "Either party may terminate this employment with [30/60/90] days' written notice or by paying in lieu of notice. The Employer may terminate without notice in case of: (a) willful insubordination; (b) gross misconduct; (c) chronic absence; (d) material breach of duties. Upon termination, the Employee shall return all company property and confidential information. The Employer shall provide a full and final settlement including all dues, leave encashment, gratuity (if applicable), and any severance amount as per applicable law."
+      },
+      {
+        "id": "EMP_IND_005",
+        "type": "Confidentiality and Non-Disclosure",
+        "priority": "critical",
+        "description": "Obligation to protect proprietary and confidential information",
+        "recommendations": "Include clear definition of confidential information, permitted disclosures, and duration of obligation.",
+        "standard_text": "The Employee agrees to maintain strict confidentiality of all proprietary information, trade secrets, business plans, financial data, customer lists, and other confidential information of the Employer. The Employee shall not disclose such information to third parties without prior written authorization, except as required by law. This obligation shall survive termination for a period of [2-5 years]. The Employee may disclose information as required by legal process with prior notice to the Employer where permitted by law."
+      },
+      {
+        "id": "EMP_IND_006",
+        "type": "Non-Compete and Non-Solicitation",
+        "priority": "critical",
+        "description": "Restrictions on employee competing with employer after employment ends",
+        "recommendations": "Ensure reasonableness per Indian law. Typically 6-12 months in India. Cannot be too restrictive.",
+        "standard_text": "During the term of employment and for [6-12] months thereafter, the Employee shall not: (a) directly or indirectly engage in any business similar to or competing with the Employer's business; (b) solicit, recruit, or attempt to recruit any employee of the Employer; (c) solicit or service any customer or client of the Employer. This restriction shall apply within [geographical area/India]. The Employee acknowledges that this restriction is reasonable and necessary to protect the Employer's legitimate business interests."
+      }
+    ],
+    "important_clauses": [
+      {
+        "id": "EMP_IND_007",
+        "type": "Leave Policy and Procedures",
+        "priority": "important",
+        "description": "Detailed leave approval process and policies",
+        "recommendations": "Must comply with statutory requirements. Include process for leave approval and restrictions.",
+        "standard_text": "The Employee shall submit leave requests at least [7-10] days in advance to the immediate supervisor. Casual and sick leave may be taken without advance notice if unavoidable. Leave during peak business periods or critical projects may be restricted. All leave must be taken as per the company leave policy and statutory provisions of applicable Indian labor laws. Leave encashment is [permissible/not permissible] except at termination."
+      },
+      {
+        "id": "EMP_IND_008",
+        "type": "Performance Management and Appraisal",
+        "priority": "important",
+        "description": "Process for evaluating employee performance",
+        "recommendations": "Include frequency of appraisals, performance metrics, and process for improvement.",
+        "standard_text": "The Employee shall be subject to periodic performance appraisals conducted [quarterly/bi-annually/annually]. Appraisals shall evaluate competence, productivity, team collaboration, and adherence to company values. The results shall be communicated to the Employee with specific feedback. Poor performance may result in performance improvement plans or disciplinary action. Appraisals shall be fair, objective, and based on documented performance metrics."
+      },
+      {
+        "id": "EMP_IND_009",
+        "type": "Dispute Resolution",
+        "priority": "important",
+        "description": "Process for resolving employment disputes",
+        "recommendations": "Include escalation within company and external dispute resolution mechanisms.",
+        "standard_text": "Any dispute arising from this employment shall first be addressed through internal grievance procedures. The Employee may file a formal grievance with the HR department, which shall be addressed within [15-30] days. If not resolved, either party may refer the matter to [labor conciliation/arbitration] as applicable under Indian labor laws. The settlement arrived at through conciliation shall be binding on both parties."
+      },
+      {
+        "id": "EMP_IND_010",
+        "type": "Tax Compliance and Statutory Deductions",
+        "priority": "important",
+        "description": "Compliance with income tax and statutory contributions",
+        "recommendations": "Specify employer's responsibility for TDS, PF, ESI, and professional tax.",
+        "standard_text": "The Employer shall deduct income tax at source (TDS) as per applicable tax rates and remit to the Income Tax Department. The Employer shall contribute to the Employee Provident Fund (EPF), Employee State Insurance (ESI), and professional tax as per applicable laws and rates. The Employer shall provide Form 12BA/12BB, salary slips, and other statutory documents. The Employee shall cooperate in providing required information for tax and compliance purposes."
+      }
+    ],
+    "optional_clauses": [
+      {
+        "id": "EMP_IND_011",
+        "type": "Relocation and Transfer Policy",
+        "priority": "optional",
+        "description": "Terms for internal transfer or relocation of employee",
+        "recommendations": "Include compensation for relocation, tenure requirements, and approval process.",
+        "standard_text": "The Employee may be transferred or relocated as per business requirements with [60] days' notice. Upon relocation [within/outside India], the Employer shall provide relocation assistance including [travel, accommodation, moving expenses] up to [specified amount]. The Employee shall be entitled to [specific benefits] during relocation. Repeated transfers may be subject to transfer policy."
+      },
+      {
+        "id": "EMP_IND_012",
+        "type": "Training and Development",
+        "priority": "optional",
+        "description": "Opportunities and costs for employee training",
+        "recommendations": "Include cost-sharing for training and service bond if training is sponsored.",
+        "standard_text": "The Employer may sponsor training and development programs for the Employee's professional growth. The Employer may require the Employee to execute a service bond for [specified period] in case of costly training [value above INR threshold]. If the Employee voluntarily leaves during the bond period, the Employee shall reimburse [specified portion] of training costs."
+      },
+      {
+        "id": "EMP_IND_013",
+        "type": "Equity and Stock Options",
+        "priority": "optional",
+        "description": "Grant of stock options or equity stakes",
+        "recommendations": "Include vesting schedule, exercise price, and terms for stock options.",
+        "standard_text": "The Employee shall be granted [number] stock options vesting over [4 years] with [1-year] cliff. The exercise price shall be [specified]. Vesting shall be conditional on continued employment. Upon termination, unvested options shall be forfeited. Vested options may be exercised within [90] days of termination. The Employee shall execute the stock option agreement incorporating all terms."
+      }
+    ]
+  },
+  "NDA_INDIA": {
+    "contract_type": "Non-Disclosure Agreement",
+    "jurisdiction": "India",
+    "critical_clauses": [
+      {
+        "id": "NDA_IND_001",
+        "type": "Definition of Confidential Information",
+        "priority": "critical",
+        "description": "Clear definition of what constitutes confidential information",
+        "recommendations": "Be specific about what's covered - business plans, financial data, technical information, customer lists, etc.",
+        "standard_text": "Confidential Information means all non-public information disclosed by the Disclosing Party to the Receiving Party, whether orally, in writing, or in any other form, including but not limited to: (a) business plans, strategies, and financial information; (b) technical data, specifications, source code, algorithms, and inventions; (c) customer and supplier lists, pricing information, and business relationships; (d) trade secrets and know-how; (e) any information marked as 'Confidential' or reasonably identified as confidential. Confidential Information excludes information that is: (i) publicly available through no breach of this Agreement; (ii) rightfully possessed prior to disclosure; (iii) rightfully received from a third party without confidentiality obligation."
+      },
+      {
+        "id": "NDA_IND_002",
+        "type": "Permitted Disclosures",
+        "priority": "critical",
+        "description": "Exceptions where confidential information may be disclosed",
+        "recommendations": "Include legally required disclosures, disclosures to employees/advisors, and with prior notice.",
+        "standard_text": "The Receiving Party may disclose Confidential Information: (a) to its employees, contractors, and advisors who have a legitimate need to know and who are bound by confidentiality obligations at least as stringent as this Agreement; (b) when required by law, court order, or regulatory authority, provided the Receiving Party gives prior written notice to the Disclosing Party to permit it to seek protective order or injunction; (c) with prior written consent of the Disclosing Party. Any permitted disclosure does not relieve the Receiving Party of its obligations to protect the Confidential Information."
+      },
+      {
+        "id": "NDA_IND_003",
+        "type": "Term of Confidentiality",
+        "priority": "critical",
+        "description": "Duration of confidentiality obligations",
+        "recommendations": "Typically 2-5 years in India. May be longer for trade secrets.",
+        "standard_text": "The Receiving Party's obligation to maintain confidentiality shall commence on the date of disclosure and shall continue for a period of [3-5 years] thereafter. Notwithstanding the above, obligations regarding trade secrets shall continue for as long as the information qualifies as a trade secret under applicable Indian law. Upon expiration of the confidentiality period, all Confidential Information shall be returned or destroyed as directed by the Disclosing Party."
+      },
+      {
+        "id": "NDA_IND_004",
+        "type": "Return or Destruction of Information",
+        "priority": "critical",
+        "description": "Obligation to return or destroy confidential information after relationship ends",
+        "recommendations": "Specify whether information is destroyed or returned, and require certification.",
+        "standard_text": "Upon termination of this Agreement or upon request by the Disclosing Party, the Receiving Party shall, at its option, either: (a) return all Confidential Information in its original form; or (b) destroy all Confidential Information and certify such destruction in writing within [30] days. The Receiving Party may retain one archival copy for legal compliance purposes, which shall remain subject to confidentiality obligations. Electronic copies shall be securely deleted. This obligation shall apply to all copies regardless of format or location."
+      },
+      {
+        "id": "NDA_IND_005",
+        "type": "Consequences of Breach",
+        "priority": "critical",
+        "description": "Remedies for breach of confidentiality",
+        "recommendations": "Include damages, injunctive relief, and acknowledgment that breach causes irreparable harm.",
+        "standard_text": "The Receiving Party acknowledges that any breach of this Agreement may cause irreparable harm to the Disclosing Party for which monetary damages may be an inadequate remedy. The Disclosing Party shall be entitled to seek equitable relief, including injunctive relief and specific performance, without posting bond and without the necessity of proving actual damages. In addition, the Disclosing Party shall be entitled to recover all reasonable costs and expenses incurred in enforcing this Agreement, including legal fees and court costs."
+      },
+      {
+        "id": "NDA_IND_006",
+        "type": "Exceptions to Confidentiality",
+        "priority": "critical",
+        "description": "Information not covered by confidentiality obligations",
+        "recommendations": "Clearly carve out exceptions to avoid disputes.",
+        "standard_text": "Confidential Information does not include information that: (a) is or becomes publicly available through no breach of this Agreement; (b) is rightfully possessed by the Receiving Party at the time of disclosure as evidenced by written records; (c) is rightfully received by the Receiving Party from a third party without breach of any confidentiality obligation; (d) is independently developed by the Receiving Party without use of or reference to the Confidential Information, as evidenced by written records; (e) is required to be disclosed by law or court order, provided timely notice is given. The Receiving Party bears the burden of proof for claiming an exception."
+      }
+    ],
+    "important_clauses": [
+      {
+        "id": "NDA_IND_007",
+        "type": "Purpose and Permitted Use",
+        "priority": "important",
+        "description": "Specifies the purpose for which information may be used",
+        "recommendations": "Limit use to stated purpose only. Prohibit use for competitive purposes.",
+        "standard_text": "The Receiving Party may use Confidential Information solely for the stated purpose of [evaluating potential business relationship/specific project]. The Receiving Party shall not use Confidential Information for any other purpose, including competitive purposes, without prior written consent. The Receiving Party shall not copy, reproduce, or create derivative works from Confidential Information except as reasonably necessary for the stated purpose."
+      },
+      {
+        "id": "NDA_IND_008",
+        "type": "No License or Obligation",
+        "priority": "important",
+        "description": "Clarifies that disclosure does not grant license or create obligation",
+        "recommendations": "Important to protect against claims of ownership or commitment.",
+        "standard_text": "Disclosure of Confidential Information does not grant any license, option, or other right to the Receiving Party in or to the Confidential Information. Neither party is obligated to enter into any business transaction based on this Agreement. Either party may decline to proceed with any proposed transaction. No commitment shall be binding unless evidenced by a separately executed written agreement."
+      },
+      {
+        "id": "NDA_IND_009",
+        "type": "Representations and Warranties",
+        "priority": "important",
+        "description": "Each party represents it has authority to enter into the agreement",
+        "recommendations": "Include standard representations about authority and non-violation of third-party rights.",
+        "standard_text": "Each party represents and warrants that: (a) it has full authority to enter into this Agreement; (b) the Confidential Information disclosed does not infringe any third-party intellectual property rights; (c) it shall comply with all applicable laws in performing its obligations; (d) it shall not use Confidential Information in violation of any third-party rights or applicable laws."
+      },
+      {
+        "id": "NDA_IND_010",
+        "type": "No Warranty on Information",
+        "priority": "important",
+        "description": "Information is provided 'as is' without warranty",
+        "recommendations": "Protect discloser from liability for accuracy or completeness of information.",
+        "standard_text": "The Disclosing Party makes no representation or warranty regarding the accuracy, completeness, or usefulness of the Confidential Information. Confidential Information is provided 'as is' without any warranty, express or implied. The Disclosing Party shall not be liable for any errors, omissions, or inaccuracies in Confidential Information or for any damages arising from reliance on such information."
+      }
+    ],
+    "optional_clauses": [
+      {
+        "id": "NDA_IND_011",
+        "type": "Residual Information and Residual Knowledge",
+        "priority": "optional",
+        "description": "Treatment of residual knowledge retained in employees' memories",
+        "recommendations": "May limit this for employees. Specify what constitutes residual knowledge.",
+        "standard_text": "Notwithstanding other provisions, employees of the Receiving Party may use residual information, knowledge, ideas, and experience retained in unaided memory by those employees in their subsequent work, provided that such use does not constitute a violation of this Agreement or other obligations. However, this provision shall not permit the Receiving Party to use Confidential Information for competitive purposes or to violate any other confidentiality obligations."
+      },
+      {
+        "id": "NDA_IND_012",
+        "type": "Term and Termination",
+        "priority": "optional",
+        "description": "Duration of the NDA and termination provisions",
+        "recommendations": "Specify term of agreement and any renewal provisions.",
+        "standard_text": "This Agreement shall commence on the date of execution and shall continue for [3-5 years] unless earlier terminated. Either party may terminate this Agreement with [30] days' written notice. Confidentiality obligations regarding Confidential Information disclosed during the term shall survive termination as specified in the confidentiality term clause."
+      },
+      {
+        "id": "NDA_IND_013",
+        "type": "Dispute Resolution",
+        "priority": "optional",
+        "description": "Process for resolving disputes under the NDA",
+        "recommendations": "Include arbitration preferences and jurisdiction.",
+        "standard_text": "Any dispute arising out of or relating to this Agreement shall be resolved through binding arbitration under the Arbitration and Conciliation Act, 1996. Arbitration shall be conducted by a single arbitrator. The seat of arbitration shall be [Mumbai/Delhi] and the language shall be English. Notwithstanding the foregoing, the Disclosing Party shall be entitled to seek injunctive relief in any competent court."
+      }
+    ]
+  },
+  "PARTNERSHIP_AGREEMENT_INDIA": {
+    "contract_type": "Partnership Agreement",
+    "jurisdiction": "India",
+    "critical_clauses": [
+      {
+        "id": "PART_IND_001",
+        "type": "Capital Contribution",
+        "priority": "critical",
+        "description": "Amount of capital each partner contributes to the partnership",
+        "recommendations": "Clearly specify contribution amount, timing, and form. Comply with Indian Partnership Act.",
+        "standard_text": "Each partner shall contribute capital to the partnership in the following amounts: [Partner 1]: INR [amount], [Partner 2]: INR [amount]. Capital shall be contributed within [30] days of the effective date via bank transfer to the partnership account. If a partner fails to contribute within the specified period, interest shall accrue at [18%] per annum. Capital contributions shall be evidenced by promissory notes or contribution certificates. Changes to capital contributions require unanimous written consent."
+      },
+      {
+        "id": "PART_IND_002",
+        "type": "Profit and Loss Distribution",
+        "priority": "critical",
+        "description": "How profits and losses are shared among partners",
+        "recommendations": "Specify distribution ratio and timing. Consider ratio tied to contribution or performance.",
+        "standard_text": "Profits and losses of the partnership shall be distributed among partners in the following ratio: [Partner 1]: [%], [Partner 2]: [%]. Profits shall be distributed [quarterly/semi-annually/annually] after all partnership expenses, debts, and taxes are paid. Each partner shall be entitled to their share of profits regardless of their participation in management, unless otherwise agreed. Losses shall be shared in the same ratio as profits. Distributions shall be made only from genuine business profits, not capital."
+      },
+      {
+        "id": "PART_IND_003",
+        "type": "Decision Making and Governance",
+        "priority": "critical",
+        "description": "How decisions are made in the partnership",
+        "recommendations": "Distinguish between routine decisions (simple majority) and major decisions (unanimous consent).",
+        "standard_text": "Routine business decisions shall be made by any partner acting in the ordinary course of business. Major decisions require written approval of [all/majority of] partners, including: (a) admission of new partners; (b) merger or acquisition; (c) sale of partnership assets exceeding INR [amount]; (d) borrowing exceeding INR [amount]; (e) changes to partnership agreement; (f) dissolution; (g) distribution of capital; (h) business line changes. All decisions shall be documented. Each partner shall have equal voting rights unless otherwise specified."
+      },
+      {
+        "id": "PART_IND_004",
+        "type": "Dispute Resolution and Arbitration",
+        "priority": "critical",
+        "description": "Process for resolving disputes between partners",
+        "recommendations": "Include escalation and arbitration clauses. Reference Partnership Act provisions.",
+        "standard_text": "Disputes between partners shall first be addressed through good faith negotiations for [30] days. If unresolved, disputes shall be resolved through binding arbitration under the Arbitration and Conciliation Act, 1996 and governed by the provisions of the Indian Partnership Act, 1932. Arbitration shall be conducted by a single arbitrator selected by mutual agreement. The seat of arbitration shall be [specified location]. Arbitration costs shall be borne equally by all parties."
+      },
+      {
+        "id": "PART_IND_005",
+        "type": "Partner Exit and Buyout Terms",
+        "priority": "critical",
+        "description": "Conditions and terms for a partner exiting the partnership",
+        "recommendations": "Include valuation method, buyout price, payment terms, and post-exit obligations.",
+        "standard_text": "If a partner wishes to exit, [30-90] days' notice shall be provided. The exiting partner's share shall be valued based on [agreed formula/book value/independent valuation]. Remaining partners have the right of first refusal to purchase the exiting partner's share at the agreed value within [30] days. If not purchased, the share may be sold to a third party with unanimous consent of remaining partners. Payment shall be made [within specified period] in [installments/lump sum]. The exiting partner shall execute a non-compete for [period] and hand over all partnership assets, records, and information."
+      },
+      {
+        "id": "PART_IND_006",
+        "type": "Dissolution and Winding Up",
+        "priority": "critical",
+        "description": "Process for dissolving the partnership",
+        "recommendations": "Follow Indian Partnership Act provisions. Specify asset distribution order.",
+        "standard_text": "The partnership may be dissolved by: (a) mutual written agreement of all partners; (b) notice of [90] days by any partner; (c) death of a partner [unless otherwise agreed]; (d) breach of partnership agreement by any partner. Upon dissolution, the partnership shall wind up as follows: (1) all partnership assets shall be liquidated; (2) all partnership debts and liabilities shall be paid in priority order; (3) remaining assets shall be distributed to partners in their profit-sharing ratio; (4) a final accounting shall be prepared and audited. The partnership shall be formally deregistered within [period] of dissolution."
+      }
+    ],
+    "important_clauses": [
+      {
+        "id": "PART_IND_007",
+        "type": "Partner Duties and Responsibilities",
+        "priority": "important",
+        "description": "Specific duties and responsibilities of each partner",
+        "recommendations": "Clarify roles, time commitment, and accountability. Reference Partnership Act Section 13.",
+        "standard_text": "Each partner shall: (a) act honestly and in good faith in partnership dealings; (b) use reasonable care and skill in managing partnership affairs; (c) not compete with the partnership without consent; (d) not enter into partnership engagements on behalf of the firm unless authorized; (e) maintain partnership accounts and records; (f) make full disclosure of all material facts; (g) indemnify the partnership for losses caused by wilful breach. [Specific partner] shall be responsible for [specific functions/areas]. All partners shall have equal rights in partnership management unless otherwise specified."
+      },
+      {
+        "id": "PART_IND_008",
+        "type": "Non-Compete and Non-Solicitation",
+        "priority": "important",
+        "description": "Restrictions on partners competing with the partnership",
+        "recommendations": "During partnership and post-exit. Must be reasonable under Indian law.",
+        "standard_text": "During the partnership term, no partner shall: (a) engage in competing business without written consent of all partners; (b) solicit clients/customers of the partnership; (c) poach employees. Upon exit, the partner shall not compete with the partnership for [12-24] months in the [geographical area/India]. Non-compete shall not prevent the partner from pursuing a different business or using general skills. Non-solicitation shall apply for [12-24] months post-exit to customers and employees of the partnership."
+      },
+      {
+        "id": "PART_IND_009",
+        "type": "Confidentiality and Information",
+        "priority": "important",
+        "description": "Protection of partnership confidential information",
+        "recommendations": "Include trade secrets, client information, financial data.",
+        "standard_text": "All partners shall maintain strict confidentiality of all partnership information including business plans, financial data, customer lists, pricing, operational details, and trade secrets. Information shall not be disclosed to non-partners without written consent of all partners, except as required by law. Confidentiality obligations shall survive termination of the partnership for [3-5 years]. Each partner has a duty to inform others of all material facts affecting the partnership."
+      },
+      {
+        "id": "PART_IND_010",
+        "type": "Indemnification and Liability",
+        "priority": "important",
+        "description": "Allocation of liability and indemnification provisions",
+        "recommendations": "Specify who pays for partnership liabilities and when indemnification applies.",
+        "standard_text": "The partnership shall indemnify and hold harmless each partner from liabilities incurred in the ordinary course of partnership business. However, a partner shall be liable for: (a) willful breach of partnership agreement; (b) gross negligence or willful misconduct; (c) violations of law; (d) unauthorized commitment of partnership funds; (e) personal loans taken in partnership name without authority. Each partner's liability to third parties shall be joint and several. Internal indemnification for wrongful acts shall be apportioned based on fault."
+      }
+    ],
+    "optional_clauses": [
+      {
+        "id": "PART_IND_011",
+        "type": "Expansion and New Partners",
+        "priority": "optional",
+        "description": "Process for adding new partners to the partnership",
+        "recommendations": "Require unanimous consent for new partners. Specify contribution and profit-sharing.",
+        "standard_text": "New partners may be admitted only with unanimous written consent of all existing partners. A new partner shall contribute capital of [specified amount or percentage]. The new partner's profit-sharing ratio shall be [specified] and shall be effective from the date of admission. Existing partners' ratios may be adjusted to accommodate the new partner. The new partner shall sign a partnership deed accepting all obligations."
+      },
+      {
+        "id": "PART_IND_012",
+        "type": "Financing and Refinancing",
+        "priority": "optional",
+        "description": "Terms for obtaining loans and refinancing",
+        "recommendations": "Include approval requirements and liability for loans.",
+        "standard_text": "The partnership may borrow funds for business purposes with [unanimous/majority] consent. Any partner can commit the partnership to borrowing up to INR [amount] without consent. Loans exceeding INR [amount] require written approval of [all/majority] partners. All partners shall be jointly and severally liable for partnership debts. Refinancing of existing debt requires [unanimous/majority] approval."
+      },
+      {
+        "id": "PART_IND_013",
+        "type": "Acquisition and Merger",
+        "priority": "optional",
+        "description": "Terms for acquiring other businesses or merging with other entities",
+        "recommendations": "Require unanimous consent. Specify approval process and impacts on partnership.",
+        "standard_text": "Any acquisition or merger shall require unanimous written approval of all partners. Terms of acquisition or merger shall be negotiated by authorized partners and finalized with approval of all partners. Proposed acquisitions or mergers shall be presented with full financial details and strategic rationale. All partners shall have the right to review and approve major transaction terms."
+      }
+    ]
+  },
+  "VENDOR_AGREEMENT_INDIA": {
+    "contract_type": "Vendor Agreement",
+    "jurisdiction": "India",
+    "critical_clauses": [
+      {
+        "id": "VEN_IND_001",
+        "type": "Product/Service Description",
+        "priority": "critical",
+        "description": "Detailed specification of products or services to be provided",
+        "recommendations": "Include specifications, quality standards, and reference technical documents.",
+        "standard_text": "The Vendor shall provide [specify products/services] in accordance with the specifications outlined in Schedule A, including but not limited to: [technical specifications, quality standards, packaging requirements, labeling requirements]. All products shall meet applicable Indian Standards (IS), international standards (if applicable), and regulatory requirements. The Vendor shall provide samples for approval prior to bulk delivery. Any deviation from specifications requires prior written approval from the Buyer."
+      },
+      {
+        "id": "VEN_IND_002",
+        "type": "Pricing and Payment Terms",
+        "priority": "critical",
+        "description": "Price structure and payment conditions",
+        "recommendations": "Specify unit price, volume discounts, payment terms (typically 30-45 days in India), and invoice details.",
+        "standard_text": "The Vendor shall charge INR [amount] per unit/service. Volume discounts shall apply as follows: [Volume tier 1]: [Discount %], [Volume tier 2]: [Discount %]. The price includes all costs including manufacturing, packaging, transportation, and insurance. Invoices shall be submitted upon delivery/completion of services with [specific details]. Payment shall be made within [30-45] days of invoice date via [bank transfer/cheque] to the Vendor's designated account. Late payment shall accrue interest at [18%] per annum. Prices shall remain fixed for [specified period] unless changed by written agreement."
+      },
+      {
+        "id": "VEN_IND_003",
+        "type": "Delivery and SLA",
+        "priority": "critical",
+        "description": "Delivery schedules and service level commitments",
+        "recommendations": "Specify delivery locations, dates, frequency, and performance targets.",
+        "standard_text": "The Vendor shall deliver products/services as per the delivery schedule specified in Schedule B: [frequency, dates, quantities]. Delivery shall be made to [specified location(s)]. Delivery time is of the essence. The Vendor warrants a Service Level of: (a) Delivery: [within X days] from order; (b) Availability: [99.5%] for consumables; (c) Quality: [X% defect rate]. For every percentage point below SLA, the Buyer shall be entitled to [% of invoice] service credit. Repeated SLA misses [for X consecutive months] shall entitle the Buyer to terminate this Agreement."
+      },
+      {
+        "id": "VEN_IND_004",
+        "type": "Quality Assurance and Warranties",
+        "priority": "critical",
+        "description": "Quality standards and warranties on products/services",
+        "recommendations": "Include warranty period, defect coverage, and remedies for non-conformance.",
+        "standard_text": "The Vendor warrants that all products/services shall be: (a) new, unused, and of high quality; (b) free from defects in material and workmanship; (c) conform to all specifications; (d) safe and suitable for purpose; (e) comply with all applicable laws and standards. Warranty period shall be [12] months from delivery. During warranty, the Vendor shall, at its option, replace or repair defective products at no cost. The Buyer shall notify the Vendor of defects within [30] days. The Vendor shall respond within [7] days and complete repair/replacement within [15] days."
+      },
+      {
+        "id": "VEN_IND_005",
+        "type": "Intellectual Property Rights",
+        "priority": "critical",
+        "description": "Ownership of IP in products and protection from infringement",
+        "recommendations": "Indemnify buyer from IP infringement claims.",
+        "standard_text": "The Vendor shall own all intellectual property in the products/services provided. However, the Vendor warrants that all products/services do not infringe any third-party intellectual property rights. The Vendor shall indemnify and hold harmless the Buyer from any claims, damages, and costs arising from IP infringement. If an infringement claim arises, the Vendor shall, at its cost: (a) obtain the right for the Buyer to continue using the product; (b) replace or modify the product to be non-infringing; or (c) terminate the Agreement and refund amounts paid."
+      },
+      {
+        "id": "VEN_IND_006",
+        "type": "Liability and Indemnification",
+        "priority": "critical",
+        "description": "Limits on liability and indemnification for damages",
+        "recommendations": "Vendor assumes liability for product quality and defects. Set reasonable caps.",
+        "standard_text": "Vendor's total liability under this Agreement shall not exceed [12 months of average annual order value / specified amount in INR]. Vendor shall be liable for defective products, delayed delivery, and breach of SLA up to the cap. Vendor shall indemnify the Buyer against claims by third parties for injuries, property damage, or losses caused by defective products. Vendor's liability for product defects is in addition to warranty obligations and shall include replacement and refund. Neither party shall be liable for indirect, consequential, or punitive damages."
+      }
+    ],
+    "important_clauses": [
+      {
+        "id": "VEN_IND_007",
+        "type": "Confidentiality and Information Security",
+        "priority": "important",
+        "description": "Protection of business confidential information exchanged",
+        "recommendations": "Include data security, business information protection.",
+        "standard_text": "Each party shall maintain confidentiality of business information shared by the other party. The Vendor shall not disclose the Buyer's business plans, pricing, volumes, or customer information to competitors or third parties. For IT services/SaaS, the Vendor shall: (a) implement industry-standard security measures; (b) encrypt data in transit and at rest; (c) perform daily backups; (d) promptly notify of any data breaches; (e) comply with data localization requirements for India."
+      },
+      {
+        "id": "VEN_IND_008",
+        "type": "Compliance and Regulatory Requirements",
+        "priority": "important",
+        "description": "Vendor's compliance with applicable Indian laws and regulations",
+        "recommendations": "Include statutory compliance, GST, licensing, certifications.",
+        "standard_text": "The Vendor shall comply with all applicable Indian and international laws including the Indian Contract Act, GST laws, labor laws, environmental regulations, and industry-specific regulations. The Vendor warrants that: (a) it holds all necessary licenses and certifications; (b) it pays all applicable taxes including GST; (c) it maintains proper records; (d) it has no liens or encumbrances on products; (e) it shall permit audits for compliance verification. Non-compliance shall be grounds for immediate termination."
+      },
+      {
+        "id": "VEN_IND_009",
+        "type": "Insurance Requirements",
+        "priority": "important",
+        "description": "Insurance coverage required from vendor",
+        "recommendations": "Require product liability insurance, professional indemnity if applicable.",
+        "standard_text": "The Vendor shall maintain, at its own cost: (a) Product Liability Insurance with minimum coverage of INR [amount]; (b) General Commercial Liability Insurance with minimum coverage of INR [amount]; (c) Professional Indemnity Insurance (if applicable) with minimum coverage of INR [amount]. Certificates of insurance shall be provided upon request. Insurance coverage shall be valid throughout the Agreement term and for [period] thereafter. Insurance shall not limit Vendor's indemnification obligations."
+      },
+      {
+        "id": "VEN_IND_010",
+        "type": "Dispute Resolution and Escalation",
+        "priority": "important",
+        "description": "Process for escalating and resolving disputes",
+        "recommendations": "Include escalation hierarchy and arbitration provisions.",
+        "standard_text": "Disputes shall first be escalated to [specified managers] for resolution within [15] days. If unresolved, disputes shall be escalated to [executive level] for resolution within [15] days. If still unresolved, disputes shall be referred to binding arbitration under the Arbitration and Conciliation Act, 1996. Arbitration shall be conducted by a single arbitrator. The seat of arbitration shall be [specified location]. Each party shall bear its own costs unless arbitrator orders otherwise."
+      }
+    ],
+    "optional_clauses": [
+      {
+        "id": "VEN_IND_011",
+        "type": "Volume Discounts and Long-Term Pricing",
+        "priority": "optional",
+        "description": "Pricing incentives for higher volumes or longer commitments",
+        "recommendations": "Include volume tiers and price lock periods.",
+        "standard_text": "If Buyer commits to minimum annual volumes of [quantity], Vendor shall provide [discount %]. If Buyer commits to [X-year] long-term purchasing, prices shall remain fixed for [period] from execution. Annual volume increases shall be negotiated in good faith. Volume commitments and discounts shall be documented in an amendment to this Agreement."
+      },
+      {
+        "id": "VEN_IND_012",
+        "type": "Renewal and Continuity",
+        "priority": "optional",
+        "description": "Automatic renewal terms and conditions",
+        "recommendations": "Specify renewal terms, notice periods, and price adjustments.",
+        "standard_text": "This Agreement shall automatically renew for successive [one-year] periods unless either party provides [90] days' written notice of non-renewal. Upon renewal, prices may be adjusted based on [CPI/mutual agreement]. Service terms and conditions shall remain the same unless modified by written amendment. All renewal obligations shall apply to the renewed period."
+      },
+      {
+        "id": "VEN_IND_013",
+        "type": "Termination and Wind-Down",
+        "priority": "optional",
+        "description": "Conditions and process for terminating the agreement",
+        "recommendations": "Include notice periods and transition assistance.",
+        "standard_text": "Either party may terminate this Agreement with [90] days' written notice for convenience. The Buyer may terminate immediately for Vendor's material breach if not cured within [30] days. Upon termination, the Vendor shall: (a) complete all pending orders; (b) provide [90] days' transition assistance; (c) transfer customer relationships and data; (d) refund prepaid amounts for undelivered products; (e) return all Buyer materials and confidential information."
+      }
+    ]
+  }
+}
