@@ -39,12 +39,19 @@ Users can:
 
 ### **Admin Module**
 Administrators can:
+<<<<<<< HEAD
 - Manage user accounts
 - Monitor contract analyses
 - View system logs and processing status
 - Manage contract types and jurisdiction standards
 - Update industry knowledge base
 - Generate reports on system usage
+=======
+- view contracts uploaded by the user
+- view users
+- view complaints
+- view feedback 
+>>>>>>> f71e36251a2fd5d45b45a2cdc7a78e56b04fbfd2
 
 ---
 
@@ -256,6 +263,7 @@ PRIORITY 4 - NICE TO HAVE:
    ├── Confidence Score: 94%
    └── Timestamp: Jan 11, 2026 - 2:45 PM
 ```
+<<<<<<< HEAD
 
 ---
 
@@ -323,3 +331,5 @@ This project is licensed under MIT License.
 ## 👨‍💻 Author
 
 ClauseGuard Development Team
+=======
+>>>>>>> f71e36251a2fd5d45b45a2cdc7a78e56b04fbfd2
