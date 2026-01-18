@@ -54,11 +54,11 @@ class ClauseItem(BaseModel):
     Represents a single clause found in a contract.
     
     Attributes:
-        id: Unique identifier for this clause
+        id: Unique identifier for this clause (auto-generated if not provided)
         type: Type/name of the clause (e.g., "Payment Terms", "Confidentiality")
         text: Full text of the clause as extracted from contract
     """
-    id: int
+    id: Optional[int] = None
     type: str
     text: str
     
@@ -70,14 +70,14 @@ class RiskItem(BaseModel):
     Represents a single identified risk or issue in the contract.
     
     Attributes:
-        id: Unique identifier for this risk
+        id: Unique identifier for this risk (auto-generated if not provided)
         clause_type: Type of clause where risk was identified
         risk_level: Severity level (LOW, MEDIUM, HIGH)
         issue: Brief title of the issue
         description: Detailed explanation of the problem
         impact: Business/legal impact of this risk
     """
-    id: int
+    id: Optional[int] = None
     clause_type: str
     risk_level: RiskLevel
     issue: str
@@ -92,14 +92,14 @@ class SuggestionItem(BaseModel):
     Represents a single improvement suggestion for the contract.
     
     Attributes:
-        id: Unique identifier for this suggestion
+        id: Unique identifier for this suggestion (auto-generated if not provided)
         priority: Priority level (HIGH, MEDIUM, LOW)
         category: Category of suggestion (Missing Clause, Wording, Protection, etc.)
         current_state: What's currently in the contract
         suggested_text: Proposed text or change
         business_impact: Why this suggestion matters
     """
-    id: int
+    id: Optional[int] = None
     priority: Priority
     category: str
     current_state: str

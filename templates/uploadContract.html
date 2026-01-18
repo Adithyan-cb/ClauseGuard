@@ -356,6 +356,492 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* ===== STEP-BY-STEP PROGRESS STYLES ===== */
+        
+        .steps-container {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            border-left: 4px solid #d4af37;
+        }
+
+        .steps-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+
+        .step-item:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            color: #0a2342;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .step-item.active .step-number {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .step-item.completed .step-number {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .step-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(52, 152, 219, 0.3);
+            border-radius: 50%;
+            border-top: 2px solid #3498db;
+            animation: spin 0.8s linear infinite;
+            display: none;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-item.active .step-spinner {
+            display: inline-block;
+        }
+
+        .step-checkmark {
+            width: 20px;
+            height: 20px;
+            display: none;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-item.completed .step-checkmark {
+            display: inline-block;
+        }
+
+        .step-content {
+            flex-grow: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #0a2342;
+            margin-bottom: 4px;
+        }
+
+        .step-description {
+            font-size: 0.85rem;
+            color: #95a5a6;
+        }
+
+        .step-item.active .step-title {
+            color: #3498db;
+        }
+
+        .step-item.completed .step-title {
+            color: #27ae60;
+        }
+
+        /* ===== RESULTS DISPLAY STYLES ===== */
+        
+        .results-container {
+            display: none;
+            margin-top: 40px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .results-container.show {
+            display: block;
+        }
+
+        .results-header {
+            background-color: #f9f9f9;
+            padding: 20px 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-top: 3px solid #27ae60;
+        }
+
+        .results-header h2 {
+            color: #0a2342;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .badge-processing {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .badge-failed {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .processing-state {
+            text-align: center;
+            padding: 40px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .processing-state h3 {
+            color: #0a2342;
+            margin-bottom: 20px;
+        }
+
+        .spinner-large {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        .processing-info {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+
+        .processing-info strong {
+            color: #0a2342;
+        }
+
+        /* Tab Navigation */
+        .tabs-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #7f8c8d;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .tab-button:hover {
+            color: #0a2342;
+        }
+
+        .tab-button.active {
+            color: #d4af37;
+            border-bottom-color: #d4af37;
+        }
+
+        .tab-content {
+            display: none;
+            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: 8px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Summary Tab */
+        .summary-section {
+            margin-bottom: 20px;
+        }
+
+        .summary-section h3 {
+            color: #0a2342;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 8px;
+        }
+
+        .summary-field {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .summary-field strong {
+            color: #0a2342;
+            margin-right: 15px;
+            min-width: 150px;
+        }
+
+        .summary-field span {
+            color: #555;
+        }
+
+        .summary-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .summary-list li {
+            padding: 8px 0;
+            color: #555;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-list li:before {
+            content: "• ";
+            color: #d4af37;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .summary-text {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Clauses Tab */
+        .clause-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+
+        .clause-item h4 {
+            color: #0a2342;
+            margin-bottom: 8px;
+        }
+
+        .clause-item p {
+            color: #555;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Risks Tab */
+        .risk-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #95a5a6;
+        }
+
+        .risk-item.high {
+            border-left-color: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.05);
+        }
+
+        .risk-item.medium {
+            border-left-color: #f39c12;
+            background-color: rgba(243, 156, 18, 0.05);
+        }
+
+        .risk-item.low {
+            border-left-color: #27ae60;
+            background-color: rgba(39, 174, 96, 0.05);
+        }
+
+        .risk-item h4 {
+            color: #0a2342;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .risk-label {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .risk-label.high {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .risk-label.medium {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .risk-label.low {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .risk-details {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .risk-details p {
+            margin: 8px 0;
+        }
+
+        .missing-clauses {
+            background-color: white;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .missing-clauses h4 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+
+        .missing-clauses ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .missing-clauses li {
+            padding: 6px 0;
+            color: #555;
+        }
+
+        .missing-clauses li:before {
+            content: "⚠️ ";
+            margin-right: 8px;
+        }
+
+        /* Suggestions Tab */
+        .suggestion-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #95a5a6;
+        }
+
+        .suggestion-item.high {
+            border-left-color: #e74c3c;
+        }
+
+        .suggestion-item.medium {
+            border-left-color: #f39c12;
+        }
+
+        .suggestion-item.low {
+            border-left-color: #27ae60;
+        }
+
+        .suggestion-item h4 {
+            color: #0a2342;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .priority-high {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .priority-medium {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .priority-low {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .suggestion-details {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .suggestion-details p {
+            margin: 8px 0;
+        }
+
+        .suggestion-code {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 8px 0;
+            overflow-x: auto;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e74c3c;
+        }
+
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
@@ -368,6 +854,18 @@
 
             .content-area {
                 padding: 15px;
+            }
+
+            .tabs-container {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                width: 100%;
+            }
+
+            .results-container {
+                max-width: 100%;
             }
         }
     </style>
@@ -444,7 +942,7 @@
 
                 <div class="form-group">
                     <label for="llm-model">Select LLM Model</label>
-                    <select id="llm-model" name="llm_model" class="form-control" required>
+                    <select id="llm-model" name="llm_model" class="form-control" >
                         <option value="">Select LLM model</option>
                         <option value="gpt-4">GPT-oss-20b</option>
                         <option value="gpt-3.5">GPT-oss-120b</option>
@@ -482,11 +980,136 @@
                 </button>
             </form>
         </div>
+
+        <!-- Results Display Section -->
+        <div id="results-container" class="results-container">
+            <!-- Processing State -->
+            <div id="processing-state" class="processing-state">
+                <h3>⏳ Analyzing Your Contract</h3>
+                
+                <!-- Steps Progress -->
+                <div class="steps-container">
+                    <ul class="steps-list">
+                        <li class="step-item active" id="step-1">
+                            <div class="step-number">1</div>
+                            <svg class="step-checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <div class="step-spinner"></div>
+                            <div class="step-content">
+                                <div class="step-title">Extracting Text from PDF</div>
+                                <div class="step-description">Reading and processing the contract document</div>
+                            </div>
+                        </li>
+                        <li class="step-item" id="step-2">
+                            <div class="step-number">2</div>
+                            <svg class="step-checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <div class="step-spinner"></div>
+                            <div class="step-content">
+                                <div class="step-title">Analyzing with AI</div>
+                                <div class="step-description">Generating summary, extracting clauses and risks</div>
+                            </div>
+                        </li>
+                        <li class="step-item" id="step-3">
+                            <div class="step-number">3</div>
+                            <svg class="step-checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <div class="step-spinner"></div>
+                            <div class="step-content">
+                                <div class="step-title">Comparing with Standards</div>
+                                <div class="step-description">Comparing against industry standard clauses</div>
+                            </div>
+                        </li>
+                        <li class="step-item" id="step-4">
+                            <div class="step-number">4</div>
+                            <svg class="step-checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <div class="step-spinner"></div>
+                            <div class="step-content">
+                                <div class="step-title">Generating Suggestions</div>
+                                <div class="step-description">Creating improvement recommendations</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="processing-info" style="text-align: center; margin-top: 20px;">Processing time: <strong id="processing-time">0</strong>s</p>
+                <p class="processing-info" style="text-align: center;">This usually takes 30-60 seconds</p>
+            </div>
+
+            <!-- Results State (Hidden until analysis complete) -->
+            <div id="results-state" style="display: none;">
+                <!-- Results Header -->
+                <div class="results-header">
+                    <h2>
+                        <i class="fas fa-check-circle"></i>
+                        Analysis Results
+                    </h2>
+                    <div>
+                        <span class="status-badge badge-completed">
+                            <span id="status-text">✓ Completed</span>
+                        </span>
+                        <span style="margin-left: 15px; color: #7f8c8d;">
+                            Processing Time: <strong id="total-time">0</strong>s
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="tabs-container">
+                    <button class="tab-button active" data-tab="summary">
+                        <i class="fas fa-file-alt"></i> Summary
+                    </button>
+                    <button class="tab-button" data-tab="clauses">
+                        <i class="fas fa-list"></i> Clauses
+                    </button>
+                    <button class="tab-button" data-tab="risks">
+                        <i class="fas fa-exclamation-triangle"></i> Risks
+                    </button>
+                    <button class="tab-button" data-tab="suggestions">
+                        <i class="fas fa-lightbulb"></i> Suggestions
+                    </button>
+                </div>
+
+                <!-- Summary Tab -->
+                <div id="summary" class="tab-content active">
+                    <div id="summary-content"></div>
+                </div>
+
+                <!-- Clauses Tab -->
+                <div id="clauses" class="tab-content">
+                    <div id="clauses-content"></div>
+                </div>
+
+                <!-- Risks Tab -->
+                <div id="risks" class="tab-content">
+                    <div id="risks-content"></div>
+                </div>
+
+                <!-- Suggestions Tab -->
+                <div id="suggestions" class="tab-content">
+                    <div id="suggestions-content"></div>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-state" style="display: none;">
+                <div class="error-message">
+                    <strong>Analysis Failed</strong>
+                    <p id="error-text"></p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="notification" class="notification"></div>
 
     <script>
+        // ===== UPLOAD FORM HANDLER =====
         document.getElementById('contract-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -521,7 +1144,7 @@
             showNotification('Uploading contract...', 'loading');
 
             // Send AJAX request
-            fetch('{% url "upload-contract" %}', {
+            fetch('{% url "api-upload-contract" %}', {
                 method: 'POST',
                 body: formData
             })
@@ -535,26 +1158,347 @@
             })
             .then(data => {
                 if (data.status === 'success') {
-                    showNotification(data.message, 'success');
+                    showNotification('Contract uploaded! Starting analysis...', 'success');
+                    // Show results container and start polling
+                    document.getElementById('results-container').classList.add('show');
                     // Reset form
                     document.getElementById('contract-form').reset();
-                    // Redirect to view contracts after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = '{% url "view-contracts" %}';
-                    }, 2000);
+                    // Start polling for results
+                    startPolling(data.analysis_id);
                 } else {
                     showNotification(data.message, 'error');
+                    submitBtn.disabled = false;
                 }
             })
             .catch(error => {
                 showNotification(error.message || 'An error occurred while uploading the contract', 'error');
-            })
-            .finally(() => {
-                // Re-enable submit button
                 submitBtn.disabled = false;
             });
         });
 
+        // ===== POLLING LOGIC =====
+        let pollingInterval;
+        let startTime;
+        let currentStep = 1;
+
+        function startPolling(analysisId) {
+            startTime = Date.now();
+            let pollCount = 0;
+
+            // Initialize steps
+            updateStep(1);
+
+            pollingInterval = setInterval(async () => {
+                pollCount++;
+                
+                // Update processing time
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('processing-time').textContent = elapsed;
+
+                // Update step based on elapsed time
+                if (elapsed < 10) {
+                    updateStep(1);
+                } else if (elapsed < 30) {
+                    updateStep(2);
+                } else if (elapsed < 45) {
+                    updateStep(3);
+                } else {
+                    updateStep(4);
+                }
+
+                try {
+                    const response = await fetch(`/api/analysis/${analysisId}/`, {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken')
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        const analysisStatus = data.data.analysis_status;
+
+                        if (analysisStatus === 'completed') {
+                            clearInterval(pollingInterval);
+                            completeAllSteps();
+                            displayResults(data.data);
+                            setTimeout(() => {
+                                document.getElementById('processing-state').style.display = 'none';
+                                document.getElementById('results-state').style.display = 'block';
+                                document.getElementById('total-time').textContent = elapsed;
+                                showNotification('Analysis completed successfully!', 'success');
+                            }, 500);
+                        } else if (analysisStatus === 'failed') {
+                            clearInterval(pollingInterval);
+                            document.getElementById('processing-state').style.display = 'none';
+                            document.getElementById('error-state').style.display = 'block';
+                            document.getElementById('error-text').textContent = data.data.error_message || 'Analysis failed. Please try again.';
+                            showNotification('Analysis failed', 'error');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error polling:', error);
+                    // Continue polling even on error
+                }
+            }, 2000); // Poll every 2 seconds
+        }
+
+        // ===== UPDATE STEP PROGRESS =====
+        function updateStep(stepNumber) {
+            // Only update if step has changed
+            if (currentStep === stepNumber) {
+                return;
+            }
+
+            // Mark previous step as completed
+            if (currentStep > 0 && currentStep < stepNumber) {
+                const prevStep = document.getElementById(`step-${currentStep}`);
+                if (prevStep) {
+                    prevStep.classList.remove('active');
+                    prevStep.classList.add('completed');
+                }
+            }
+
+            // Update all steps up to current
+            for (let i = 1; i <= 4; i++) {
+                const stepElement = document.getElementById(`step-${i}`);
+                if (!stepElement) continue;
+
+                if (i < stepNumber) {
+                    stepElement.classList.remove('active');
+                    stepElement.classList.add('completed');
+                } else if (i === stepNumber) {
+                    stepElement.classList.remove('completed');
+                    stepElement.classList.add('active');
+                } else {
+                    stepElement.classList.remove('active', 'completed');
+                }
+            }
+
+            currentStep = stepNumber;
+        }
+
+        // ===== COMPLETE ALL STEPS =====
+        function completeAllSteps() {
+            for (let i = 1; i <= 4; i++) {
+                const stepElement = document.getElementById(`step-${i}`);
+                if (stepElement) {
+                    stepElement.classList.remove('active');
+                    stepElement.classList.add('completed');
+                }
+            }
+        }
+
+        // ===== DISPLAY RESULTS =====
+        function displayResults(analysisData) {
+            const summary = analysisData.summary || {};
+            const clauses = analysisData.clauses || {};
+            const risks = analysisData.risks || {};
+            const suggestions = analysisData.suggestions || {};
+
+            displaySummary(summary);
+            displayClauses(clauses);
+            displayRisks(risks);
+            displaySuggestions(suggestions);
+
+            // Set up tab switching
+            setupTabSwitching();
+        }
+
+        function displaySummary(summary) {
+            let html = '';
+
+            if (summary.contract_type || summary.parties || summary.duration) {
+                html += '<div class="summary-section">';
+                html += '<h3>📋 Contract Overview</h3>';
+                
+                if (summary.contract_type) {
+                    html += `<div class="summary-field"><strong>Type:</strong> <span>${escapeHtml(summary.contract_type)}</span></div>`;
+                }
+                if (summary.parties && summary.parties.length > 0) {
+                    html += `<div class="summary-field"><strong>Parties:</strong> <span>${escapeHtml(summary.parties.join(', '))}</span></div>`;
+                }
+                if (summary.duration) {
+                    html += `<div class="summary-field"><strong>Duration:</strong> <span>${escapeHtml(summary.duration)}</span></div>`;
+                }
+                if (summary.jurisdiction) {
+                    html += `<div class="summary-field"><strong>Jurisdiction:</strong> <span>${escapeHtml(summary.jurisdiction)}</span></div>`;
+                }
+                
+                html += '</div>';
+            }
+
+            if (summary.financial_terms) {
+                html += '<div class="summary-section">';
+                html += '<h3>💰 Financial Terms</h3>';
+                html += `<div class="summary-text">${escapeHtml(summary.financial_terms)}</div>`;
+                html += '</div>';
+            }
+
+            if (summary.key_obligations && summary.key_obligations.length > 0) {
+                html += '<div class="summary-section">';
+                html += '<h3>✓ Key Obligations</h3>';
+                html += '<ul class="summary-list">';
+                summary.key_obligations.forEach(obligation => {
+                    html += `<li>${escapeHtml(obligation)}</li>`;
+                });
+                html += '</ul>';
+                html += '</div>';
+            }
+
+            if (summary.summary) {
+                html += '<div class="summary-section">';
+                html += '<h3>📝 Full Summary</h3>';
+                html += `<div class="summary-text">${escapeHtml(summary.summary)}</div>`;
+                html += '</div>';
+            }
+
+            if (!html) {
+                html = '<p style="color: #7f8c8d;">No summary data available yet.</p>';
+            }
+
+            document.getElementById('summary-content').innerHTML = html;
+        }
+
+        function displayClauses(clauses) {
+            let html = '';
+
+            const clausesList = clauses.clauses || [];
+            const totalClauses = clauses.total_clauses || 0;
+
+            if (totalClauses > 0) {
+                html += `<h3>📄 Found ${totalClauses} Clauses</h3>`;
+                
+                clausesList.forEach((clause, idx) => {
+                    html += '<div class="clause-item">';
+                    html += `<h4>${escapeHtml(clause.type || 'Clause ' + (idx + 1))}</h4>`;
+                    html += `<p>${escapeHtml(clause.text || '')}</p>`;
+                    html += '</div>';
+                });
+            } else {
+                html = '<p style="color: #7f8c8d;">No clauses found yet.</p>';
+            }
+
+            document.getElementById('clauses-content').innerHTML = html;
+        }
+
+        function displayRisks(risks) {
+            let html = '';
+
+            const risksList = risks.risks || [];
+            const totalRisks = risks.total_risks || 0;
+            const missingClauses = risks.missing_clauses || [];
+            const totalMissing = risks.total_missing || 0;
+
+            if (totalRisks > 0) {
+                html += `<h3>⚠️ Identified ${totalRisks} Risks</h3>`;
+                
+                risksList.forEach(risk => {
+                    const riskLevel = (risk.risk_level || 'medium').toLowerCase();
+                    const icon = riskLevel === 'high' ? '🔴' : riskLevel === 'medium' ? '🟡' : '🟢';
+                    
+                    html += `<div class="risk-item ${riskLevel}">`;
+                    html += `<h4>${icon} ${escapeHtml(risk.issue || 'Risk')}<span class="risk-label ${riskLevel}">${riskLevel.toUpperCase()}</span></h4>`;
+                    html += '<div class="risk-details">';
+                    if (risk.clause_type) {
+                        html += `<p><strong>Clause:</strong> ${escapeHtml(risk.clause_type)}</p>`;
+                    }
+                    if (risk.description) {
+                        html += `<p><strong>Description:</strong> ${escapeHtml(risk.description)}</p>`;
+                    }
+                    if (risk.impact) {
+                        html += `<p><strong>Impact:</strong> ${escapeHtml(risk.impact)}</p>`;
+                    }
+                    html += '</div>';
+                    html += '</div>';
+                });
+            }
+
+            if (totalMissing > 0) {
+                html += `<div class="missing-clauses">`;
+                html += `<h4>❌ Missing Clauses (${totalMissing})</h4>`;
+                html += '<ul>';
+                missingClauses.forEach(clause => {
+                    html += `<li>${escapeHtml(clause)}</li>`;
+                });
+                html += '</ul>';
+                html += '</div>';
+            }
+
+            if (!html) {
+                html = '<p style="color: #7f8c8d;">✓ No risks identified.</p>';
+            }
+
+            document.getElementById('risks-content').innerHTML = html;
+        }
+
+        function displaySuggestions(suggestions) {
+            let html = '';
+
+            const suggestionsList = suggestions.suggestions || [];
+            const totalSuggestions = suggestions.total_suggestions || 0;
+
+            if (totalSuggestions > 0) {
+                html += `<h3>💡 ${totalSuggestions} Improvement Suggestions</h3>`;
+                
+                suggestionsList.forEach(sug => {
+                    const priority = (sug.priority || 'medium').toLowerCase();
+                    
+                    html += `<div class="suggestion-item ${priority}">`;
+                    html += `<div class="suggestion-header">`;
+                    html += `<h4>💡 ${escapeHtml(sug.category || 'Suggestion')}</h4>`;
+                    html += `<span class="priority-badge priority-${priority}">${priority.toUpperCase()}</span>`;
+                    html += `</div>`;
+                    html += '<div class="suggestion-details">';
+                    if (sug.current_state) {
+                        html += `<p><strong>Current:</strong> ${escapeHtml(sug.current_state)}</p>`;
+                    }
+                    if (sug.suggested_text) {
+                        html += `<p><strong>Suggested:</strong></p>`;
+                        html += `<div class="suggestion-code">${escapeHtml(sug.suggested_text)}</div>`;
+                    }
+                    if (sug.business_impact) {
+                        html += `<p><strong>Impact:</strong> ${escapeHtml(sug.business_impact)}</p>`;
+                    }
+                    html += '</div>';
+                    html += '</div>';
+                });
+            } else {
+                html = '<p style="color: #7f8c8d;">No improvement suggestions at this time.</p>';
+            }
+
+            document.getElementById('suggestions-content').innerHTML = html;
+        }
+
+        // ===== TAB SWITCHING =====
+        function setupTabSwitching() {
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabName = btn.getAttribute('data-tab');
+                    
+                    // Hide all tabs
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.tab-button').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Show selected tab
+                    document.getElementById(tabName).classList.add('active');
+                    btn.classList.add('active');
+                });
+            });
+        }
+
+        // ===== UTILITY FUNCTIONS =====
         function showNotification(message, type) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
@@ -568,7 +1512,28 @@
             }
         }
 
-        // Optional: Display file name when file is selected
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    cookie = cookie.trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Display file name when file is selected
         document.getElementById('contract-file').addEventListener('change', function(e) {
             const fileName = e.target.files[0]?.name || '';
             if (fileName) {

@@ -494,7 +494,7 @@ def upload_and_analyze_contract(request):
         contract_file = request.FILES.get('contract_file')
         contract_type = request.POST.get('contract_type', '')
         jurisdiction = request.POST.get('jurisdiction', 'INDIA')
-        llm_model = request.POST.get('llm_model', 'mixtral-8x7b-32768')
+        llm_model = request.POST.get('llm_model', 'llama-3.1-8b-instant')
         
         # Validate inputs
         if not contract_file:
@@ -524,31 +524,16 @@ def upload_and_analyze_contract(request):
                 'message': 'File size exceeds 10MB limit'
             }, status=400)
         
-        logger.info(f"Starting contract analysis for user {request.user.username}")
-        logger.info(f"Contract type: {contract_type}, Jurisdiction: {jurisdiction}")
+        logger.info("="*80)
+        logger.info(f"UPLOAD_AND_ANALYZE_CONTRACT: Starting for user {request.user.username}")
+        logger.info(f"  - File: {contract_file.name} ({contract_file.size} bytes)")
+        logger.info(f"  - Contract Type: {contract_type}")
+        logger.info(f"  - Jurisdiction: {jurisdiction}")
+        logger.info(f"  - LLM Model: {llm_model}")
+        logger.info("="*80)
         
-        # Initialize analysis service
-        service = ContractAnalysisService()
-        
-        # Start analysis in background thread to avoid timeout
-        def run_analysis():
-            try:
-                result = service.analyze_contract(
-                    contract_file=contract_file,
-                    contract_type=contract_type,
-                    jurisdiction=jurisdiction,
-                    llm_model=llm_model,
-                    user=request.user
-                )
-                logger.info(f"Analysis completed: {result['analysis_id']}")
-            except Exception as e:
-                logger.error(f"Error in background analysis: {str(e)}", exc_info=True)
-        
-        # Run in background thread
-        analysis_thread = Thread(target=run_analysis, daemon=True)
-        analysis_thread.start()
-        
-        # Immediately create analysis record to get ID
+        # Create Contract and ContractAnalysis records FIRST
+        logger.info("Creating Contract and ContractAnalysis database records...")
         contract = Contract.objects.create(
             user=request.user,
             contract_file=contract_file,
@@ -556,11 +541,55 @@ def upload_and_analyze_contract(request):
             jurisdiction=jurisdiction,
             llm_model=llm_model
         )
+        logger.info(f"✓ Contract created with ID: {contract.id}")
         
         contract_analysis = ContractAnalysis.objects.create(
             contract=contract,
             extraction_status='processing'
         )
+        logger.info(f"✓ ContractAnalysis created with ID: {contract_analysis.id}")
+        
+        # Initialize analysis service
+        logger.info("Initializing ContractAnalysisService...")
+        try:
+            service = ContractAnalysisService()
+            logger.info("✓ ContractAnalysisService initialized successfully")
+        except Exception as e:
+            logger.error(f"✗ Failed to initialize ContractAnalysisService: {str(e)}", exc_info=True)
+            logger.error(f"  Check: GROQ_API_KEY environment variable is set?")
+            raise
+        
+        # Start analysis in background thread to avoid timeout
+        def run_analysis():
+            logger.info("="*80)
+            logger.info(f"BACKGROUND ANALYSIS THREAD STARTED for analysis_id={contract_analysis.id}")
+            logger.info("="*80)
+            try:
+                logger.info("Calling service.analyze_contract()...")
+                result = service.analyze_contract(
+                    contract_id=contract.id,
+                    contract_analysis_id=contract_analysis.id,
+                    contract_type=contract_type,
+                    jurisdiction=jurisdiction,
+                    llm_model=llm_model
+                )
+                logger.info("="*80)
+                logger.info(f"✓ ANALYSIS COMPLETED SUCCESSFULLY for analysis_id={result.get('analysis_id')}")
+                logger.info(f"  - Processing time: {result.get('processing_time', 'N/A')}s")
+                logger.info(f"  - Status: {result.get('status')}")
+                logger.info("="*80)
+            except Exception as e:
+                logger.error("="*80)
+                logger.error(f"✗ ANALYSIS FAILED for analysis_id={contract_analysis.id}")
+                logger.error(f"  Error: {str(e)}")
+                logger.error(f"  Type: {type(e).__name__}")
+                logger.error("="*80, exc_info=True)
+        
+        # Run in background thread
+        logger.info(f"Starting background thread for analysis...")
+        analysis_thread = Thread(target=run_analysis, daemon=True)
+        analysis_thread.start()
+        logger.info(f"✓ Background thread started (Thread ID: {analysis_thread.ident})")
         
         return JsonResponse({
             'status': 'success',

@@ -17,6 +17,7 @@ import json
 import logging
 import time
 import os
+import re
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 
@@ -51,6 +52,33 @@ from myapp.services.schemas import (
 logger = logging.getLogger(__name__)
 
 
+# ============================================================================
+# UTILITY FUNCTIONS
+# ============================================================================
+
+def clean_json_output(text: str) -> str:
+    """
+    Clean LLM output by removing markdown code fences and extra whitespace.
+    
+    LLMs sometimes wrap JSON in markdown code fences (```json...```) even when
+    explicitly told not to. This function strips them out.
+    
+    Args:
+        text: Raw output from LLM
+    
+    Returns:
+        Clean JSON string ready for parsing
+    """
+    # Remove markdown code fences (```json ... ``` or just ``` ... ```)
+    text = re.sub(r'^```(?:json)?\s*', '', text.strip())
+    text = re.sub(r'\s*```$', '', text.strip())
+    
+    # Remove any leading/trailing whitespace
+    text = text.strip()
+    
+    return text
+
+
 class ContractAnalysisService:
     """
     Main orchestrator service for contract analysis.
@@ -76,24 +104,58 @@ class ContractAnalysisService:
     
     def __init__(self):
         """Initialize the service with required managers and processors."""
+        logger.info("="*80)
+        logger.info("ContractAnalysisService.__init__() called")
+        
+        logger.info("  - Initializing ContractProcessor...")
         self.processor = ContractProcessor()
-        self.chroma_manager = ChromaManager()
+        logger.info("  ✓ ContractProcessor initialized")
+        
+        logger.info("  - Initializing ChromaManager...")
+        try:
+            self.chroma_manager = ChromaManager()
+            if self.chroma_manager.available:
+                logger.info("  ✓ ChromaManager initialized")
+            else:
+                logger.warning("  ⚠ ChromaManager initialized but not available (dependencies missing)")
+                logger.warning("    Clause similarity search will be disabled")
+        except Exception as e:
+            logger.error(f"  ✗ Error initializing ChromaManager: {str(e)}")
+            logger.warning("  ⚠ Creating fallback ChromaManager instance")
+            self.chroma_manager = ChromaManager()
+        
+        logger.info("  - Initializing ContractClauseMapper...")
         self.clause_mapper = ContractClauseMapper()
+        logger.info("  ✓ ContractClauseMapper initialized")
         
         # Initialize Groq LLM via LangChain
+        logger.info("  - Reading GROQ_API_KEY from environment...")
         self.groq_api_key = os.getenv('GROQ_API_KEY')
         if not self.groq_api_key:
+            logger.error("✗ GROQ_API_KEY not found in environment variables!")
+            logger.error("  Solution: Add GROQ_API_KEY to .env or system environment")
             raise ValueError("GROQ_API_KEY not found in environment variables")
         
-        self.llm = ChatGroq(
-            model="mixtral-8x7b-32768",
-            temperature=0.3,
-            max_tokens=2048,
-            api_key=self.groq_api_key,
-            timeout=60
-        )
+        logger.info(f"  ✓ GROQ_API_KEY found (starts with: {self.groq_api_key[:10]}...)")
         
-        logger.info("ContractAnalysisService initialized successfully")
+        logger.info("  - Initializing ChatGroq with Llama 3.1 70B...")
+        try:
+            self.llm = ChatGroq(
+                model="llama-3.3-70b-versatile",
+                temperature=0.3,
+                max_tokens=2048,
+                api_key=self.groq_api_key,
+                timeout=60
+            )
+            logger.info("  ✓ ChatGroq initialized successfully")
+        except Exception as e:
+            logger.error(f"✗ Failed to initialize ChatGroq: {str(e)}", exc_info=True)
+            logger.error("  Check: Is GROQ_API_KEY valid?")
+            raise
+        
+        logger.info("="*80)
+        logger.info("✓ ContractAnalysisService initialized successfully")
+        logger.info("="*80)
     
     # ============================================================================
     # MAIN ORCHESTRATOR METHOD
@@ -101,28 +163,31 @@ class ContractAnalysisService:
     
     def analyze_contract(
         self,
-        contract_file: Any,
+        contract_id: int,
+        contract_analysis_id: int,
         contract_type: str,
         jurisdiction: str,
-        llm_model: str,
-        user: User
+        llm_model: str
     ) -> Dict[str, Any]:
         """
         Main entry point for contract analysis.
         
         Orchestrates the complete analysis workflow:
-        1. Save contract and create database records
+        1. Fetch contract and analysis records (already created in views.py)
         2. Extract PDF text
         3. Perform AI analysis (summary, clauses, risks, suggestions)
         4. Save results to database
         5. Return analysis results
         
+        IMPORTANT: Contract and ContractAnalysis records must already exist
+        (created in views.py before starting background thread)
+        
         Args:
-            contract_file: Uploaded PDF file object
+            contract_id: ID of already-created Contract record
+            contract_analysis_id: ID of already-created ContractAnalysis record
             contract_type: Type like "SERVICE_AGREEMENT_INDIA"
             jurisdiction: Location like "INDIA"
             llm_model: LLM model to use (not currently used, fixed to mixtral)
-            user: Django User object
         
         Returns:
             Dict with:
@@ -143,81 +208,114 @@ class ContractAnalysisService:
         start_time = time.time()
         
         try:
-            logger.info(f"Starting contract analysis for user {user.username}")
-            logger.info(f"Contract type: {contract_type}, Jurisdiction: {jurisdiction}")
+            logger.info("="*80)
+            logger.info("ANALYZE_CONTRACT() CALLED")
+            logger.info(f"  Contract ID: {contract_id}")
+            logger.info(f"  Analysis ID: {contract_analysis_id}")
+            logger.info(f"  Contract Type: {contract_type}")
+            logger.info(f"  Jurisdiction: {jurisdiction}")
+            logger.info(f"  LLM Model: {llm_model}")
+            logger.info("="*80)
             
-            # ==================== STEP 1: SAVE & PREPARE ====================
-            logger.info("STEP 1: Saving contract and creating database records...")
-            contract, contract_analysis = self._save_and_prepare_contract(
-                contract_file=contract_file,
-                contract_type=contract_type,
-                jurisdiction=jurisdiction,
-                llm_model=llm_model,
-                user=user
-            )
-            logger.info(f"Contract saved with ID: {contract.id}")
-            logger.info(f"ContractAnalysis created with ID: {contract_analysis.id}")
+            # ==================== STEP 1: FETCH EXISTING RECORDS ====================
+            logger.info("[STEP 1/7] Fetching contract and analysis records...")
+            try:
+                contract = Contract.objects.get(id=contract_id)
+                contract_analysis = ContractAnalysis.objects.get(id=contract_analysis_id)
+                logger.info(f"  ✓ Contract loaded (ID: {contract.id})")
+                logger.info(f"  ✓ ContractAnalysis loaded (ID: {contract_analysis.id})")
+            except Contract.DoesNotExist:
+                raise ValueError(f"Contract with ID {contract_id} not found")
+            except ContractAnalysis.DoesNotExist:
+                raise ValueError(f"ContractAnalysis with ID {contract_analysis_id} not found")
             
             # ==================== STEP 2: EXTRACT TEXT ====================
-            logger.info("STEP 2: Extracting text from PDF...")
-            contract_text = self._extract_contract_text(
-                contract_file=contract_file,
-                contract_path=contract.contract_file.path
-            )
-            logger.info(f"Successfully extracted {len(contract_text)} characters from PDF")
+            logger.info("[STEP 2/7] Extracting text from PDF...")
+            try:
+                # Use the contract file path from the already-saved file
+                contract_text = self._extract_contract_text(
+                    contract_file=None,  # Not needed, we have the path
+                    contract_path=contract.contract_file.path
+                )
+                logger.info(f"  ✓ Successfully extracted {len(contract_text)} characters from PDF")
+            except Exception as e:
+                logger.error(f"  ✗ PDF extraction failed: {str(e)}", exc_info=True)
+                raise
             
             # ==================== STEP 3: SUMMARY ANALYSIS ====================
-            logger.info("STEP 3: Analyzing contract summary...")
-            summary_data = self._analyze_summary(
-                contract_text=contract_text,
-                contract_type=contract_type
-            )
-            logger.info("Summary analysis completed")
+            logger.info("[STEP 3/7] Analyzing contract summary (calling Groq LLM)...")
+            try:
+                summary_data = self._analyze_summary(
+                    contract_text=contract_text,
+                    contract_type=contract_type
+                )
+                logger.info(f"  ✓ Summary analysis completed")
+                logger.info(f"    - Contract Type: {summary_data.get('contract_type', 'N/A')}")
+                logger.info(f"    - Parties: {len(summary_data.get('parties', []))} parties identified")
+            except Exception as e:
+                logger.error(f"  ✗ Summary analysis failed (Groq issue?): {str(e)}", exc_info=True)
+                raise
             
             # ==================== STEP 4: CLAUSE EXTRACTION ====================
-            logger.info("STEP 4: Extracting clauses from contract...")
-            clauses_data = self._extract_clauses(
-                contract_text=contract_text
-            )
-            logger.info(f"Extracted {len(clauses_data.get('clauses', []))} clauses")
+            logger.info("[STEP 4/7] Extracting clauses from contract (calling Groq LLM)...")
+            try:
+                clauses_data = self._extract_clauses(
+                    contract_text=contract_text
+                )
+                logger.info(f"  ✓ Extracted {len(clauses_data.get('clauses', []))} clauses")
+            except Exception as e:
+                logger.error(f"  ✗ Clause extraction failed (Groq issue?): {str(e)}", exc_info=True)
+                raise
             
             # ==================== STEP 5: CHROMA SEARCH ====================
-            logger.info("STEP 5: Searching ChromaDB for similar standard clauses...")
-            chromadb_comparisons = self._search_similar_clauses(
-                found_clauses=clauses_data.get('clauses', []),
-                contract_type=contract_type
-            )
-            logger.info("ChromaDB search completed")
+            logger.info("[STEP 5/7] Searching ChromaDB for similar standard clauses...")
+            try:
+                chromadb_comparisons = self._search_similar_clauses(
+                    found_clauses=clauses_data.get('clauses', []),
+                    contract_type=contract_type
+                )
+                logger.info(f"  ✓ ChromaDB search completed")
+            except Exception as e:
+                logger.error(f"  ✗ ChromaDB search failed: {str(e)}", exc_info=True)
+                raise
             
             # ==================== STEP 6: RISK ANALYSIS ====================
-            logger.info("STEP 6: Analyzing risks in contract...")
-            risks_data = self._analyze_risks(
-                contract_text=contract_text,
-                contract_type=contract_type,
-                clauses=clauses_data.get('clauses', []),
-                chromadb_comparisons=chromadb_comparisons
-            )
-            logger.info(f"Identified {len(risks_data.get('risks', []))} risks")
+            logger.info("[STEP 6/7] Analyzing risks in contract (calling Groq LLM)...")
+            try:
+                risks_data = self._analyze_risks(
+                    contract_text=contract_text,
+                    contract_type=contract_type,
+                    clauses=clauses_data.get('clauses', []),
+                    chromadb_comparisons=chromadb_comparisons,
+                    jurisdiction=jurisdiction
+                )
+                logger.info(f"  ✓ Identified {len(risks_data.get('risks', []))} risks")
+            except Exception as e:
+                logger.error(f"  ✗ Risk analysis failed (Groq issue?): {str(e)}", exc_info=True)
+                raise
             
-            # ==================== STEP 7: FIND MISSING CLAUSES ====================
-            logger.info("STEP 7: Finding missing standard clauses...")
-            missing_clauses = self._find_missing_clauses(
-                found_clauses=clauses_data.get('clauses', []),
-                contract_type=contract_type
-            )
-            logger.info(f"Found {len(missing_clauses)} missing clauses")
+            # ==================== STEP 7: GENERATE SUGGESTIONS ====================
+            logger.info("[STEP 7/7] Generating improvement suggestions (calling Groq LLM)...")
+            try:
+                missing_clauses = self._find_missing_clauses(
+                    found_clauses=clauses_data.get('clauses', []),
+                    contract_type=contract_type
+                )
+                logger.info(f"  - Found {len(missing_clauses)} missing clauses")
+                
+                suggestions_data = self._generate_suggestions(
+                    contract_text=contract_text,
+                    contract_type=contract_type,
+                    missing_clauses=missing_clauses,
+                    jurisdiction=jurisdiction
+                )
+                logger.info(f"  ✓ Generated {len(suggestions_data.get('suggestions', []))} suggestions")
+            except Exception as e:
+                logger.error(f"  ✗ Suggestion generation failed (Groq issue?): {str(e)}", exc_info=True)
+                raise
             
-            # ==================== STEP 8: GENERATE SUGGESTIONS ====================
-            logger.info("STEP 8: Generating improvement suggestions...")
-            suggestions_data = self._generate_suggestions(
-                contract_text=contract_text,
-                contract_type=contract_type,
-                missing_clauses=missing_clauses
-            )
-            logger.info(f"Generated {len(suggestions_data.get('suggestions', []))} suggestions")
-            
-            # ==================== STEP 9: SAVE RESULTS ====================
-            logger.info("STEP 9: Saving analysis results to database...")
+            # ==================== STEP 8: SAVE RESULTS ====================
+            logger.info("[STEP 8/7] Saving analysis results to database...")
             processing_time = time.time() - start_time
             
             contract_analysis = self._save_analysis_results(
@@ -231,6 +329,16 @@ class ContractAnalysisService:
             logger.info(f"Analysis saved successfully in {processing_time:.2f} seconds")
             
             # ==================== RETURN RESULTS ====================
+            logger.info("="*80)
+            logger.info(f"✓ ANALYSIS COMPLETED SUCCESSFULLY")
+            logger.info(f"  - Analysis ID: {contract_analysis.id}")
+            logger.info(f"  - Processing time: {processing_time:.2f}s")
+            logger.info(f"  - Summary generated: {bool(summary_data)}")
+            logger.info(f"  - Clauses found: {len(clauses_data.get('clauses', []))}")
+            logger.info(f"  - Risks identified: {len(risks_data.get('risks', []))}")
+            logger.info(f"  - Suggestions generated: {len(suggestions_data.get('suggestions', []))}")
+            logger.info("="*80)
+            
             return {
                 "status": "success",
                 "analysis_id": contract_analysis.id,
@@ -243,7 +351,12 @@ class ContractAnalysisService:
             }
         
         except Exception as e:
-            logger.error(f"Error during contract analysis: {str(e)}", exc_info=True)
+            logger.error("="*80)
+            logger.error(f"✗ ERROR DURING CONTRACT ANALYSIS")
+            logger.error(f"  Error Type: {type(e).__name__}")
+            logger.error(f"  Error Message: {str(e)}")
+            logger.error("="*80)
+            logger.error("Full traceback:", exc_info=True)
             
             # Mark analysis as failed
             try:
@@ -252,8 +365,9 @@ class ContractAnalysisService:
                     contract_analysis.error_message = str(e)
                     contract_analysis.processing_time = time.time() - start_time
                     contract_analysis.save()
+                    logger.error(f"  ✓ Marked analysis {contract_analysis.id} as failed in database")
             except Exception as save_error:
-                logger.error(f"Error saving failed status: {str(save_error)}")
+                logger.error(f"  ✗ Error saving failed status: {str(save_error)}")
             
             raise
     
@@ -363,16 +477,28 @@ class ContractAnalysisService:
             # Prepare prompt
             prompt = PromptTemplate.from_template(SUMMARY_PROMPT)
             
-            # Create chain: prompt -> LLM -> JSON parser
-            chain = prompt | self.llm | JsonOutputParser()
+            # Create chain WITHOUT JsonOutputParser - we'll parse manually
+            chain = prompt | self.llm
             
             # Invoke the chain
-            response = chain.invoke({
+            llm_output = chain.invoke({
                 "contract_text": contract_text[:5000],  # Limit input size
                 "contract_type": contract_type
             })
             
             logger.debug(f"Received summary response from LLM")
+            
+            # Extract text content from LLM output
+            if hasattr(llm_output, 'content'):
+                raw_text = llm_output.content
+            else:
+                raw_text = str(llm_output)
+            
+            # Clean the JSON output (remove markdown code fences)
+            clean_text = clean_json_output(raw_text)
+            
+            # Parse JSON manually
+            response = json.loads(clean_text)
             
             # Validate response using Pydantic
             validated_summary = SummaryOutput(**response)
@@ -412,21 +538,42 @@ class ContractAnalysisService:
             # Prepare prompt
             prompt = PromptTemplate.from_template(CLAUSE_EXTRACTION_PROMPT)
             
-            # Create chain
-            chain = prompt | self.llm | JsonOutputParser()
+            # Create chain WITHOUT JsonOutputParser - we'll parse manually
+            chain = prompt | self.llm
             
             # Invoke the chain
-            response = chain.invoke({
+            llm_output = chain.invoke({
                 "contract_text": contract_text[:5000]
             })
             
             logger.debug(f"Received clauses response from LLM")
+            
+            # Extract text content from LLM output
+            if hasattr(llm_output, 'content'):
+                raw_text = llm_output.content
+            else:
+                raw_text = str(llm_output)
+            
+            # Clean the JSON output (remove markdown code fences)
+            clean_text = clean_json_output(raw_text)
+            logger.debug(f"Cleaned JSON: {clean_text[:100]}...")
+            
+            # Parse JSON manually
+            response = json.loads(clean_text)
             
             # Validate response using Pydantic
             validated_clauses = ClausesOutput(**response)
             
             return validated_clauses.model_dump()
         
+        except json.JSONDecodeError as e:
+            logger.error(f"Error parsing JSON from clause extraction: {str(e)}")
+            logger.error(f"Raw response was: {raw_text[:500]}")
+            # Return safe defaults
+            return {
+                "clauses": [],
+                "total_clauses": 0
+            }
         except Exception as e:
             logger.error(f"Error extracting clauses: {str(e)}")
             # Return safe defaults
@@ -457,12 +604,20 @@ class ContractAnalysisService:
         try:
             comparisons = {}
             
+            # Check if ChromaDB is available
+            if not self.chroma_manager.available:
+                logger.debug("ChromaDB not available - skipping clause comparison")
+                return {}
+            
             # Normalize contract type for ChromaDB collection name
             collection_name = f"{contract_type.lower()}"
             
             # Get or create collection
             try:
                 collection = self.chroma_manager.get_or_create_collection(collection_name)
+                if collection is None:
+                    logger.debug("ChromaDB collection not available - skipping clause comparison")
+                    return {}
             except Exception as e:
                 logger.warning(f"Could not access ChromaDB collection: {str(e)}")
                 return {}
@@ -507,7 +662,8 @@ class ContractAnalysisService:
         contract_text: str,
         contract_type: str,
         clauses: List[Dict[str, str]],
-        chromadb_comparisons: Dict[str, Any]
+        chromadb_comparisons: Dict[str, Any],
+        jurisdiction: str = "INDIA"
     ) -> Dict[str, Any]:
         """
         Use Groq LLM to identify risks in the contract.
@@ -517,6 +673,7 @@ class ContractAnalysisService:
             contract_type: Type of contract
             clauses: Extracted clauses
             chromadb_comparisons: ChromaDB comparison results
+            jurisdiction: Jurisdiction for contract (defaults to INDIA)
         
         Returns:
             Validated risks data dictionary
@@ -527,20 +684,29 @@ class ContractAnalysisService:
             # Prepare prompt with context from ChromaDB
             prompt = PromptTemplate.from_template(RISK_ANALYSIS_PROMPT)
             
-            # Create chain
-            chain = prompt | self.llm | JsonOutputParser()
+            # Create chain WITHOUT JsonOutputParser - we'll parse manually
+            chain = prompt | self.llm
             
-            # Prepare additional context
-            comparison_summary = json.dumps(chromadb_comparisons, indent=2)[:2000]
-            
-            # Invoke the chain
-            response = chain.invoke({
+            # Invoke the chain with all required variables
+            llm_output = chain.invoke({
                 "contract_text": contract_text[:5000],
                 "contract_type": contract_type,
-                "chromadb_comparisons": comparison_summary
+                "jurisdiction": jurisdiction
             })
             
             logger.debug("Received risks response from LLM")
+            
+            # Extract text content from LLM output
+            if hasattr(llm_output, 'content'):
+                raw_text = llm_output.content
+            else:
+                raw_text = str(llm_output)
+            
+            # Clean the JSON output (remove markdown code fences)
+            clean_text = clean_json_output(raw_text)
+            
+            # Parse JSON manually
+            response = json.loads(clean_text)
             
             # Validate response using Pydantic
             validated_risks = RisksOutput(**response)
@@ -620,7 +786,8 @@ class ContractAnalysisService:
         self,
         contract_text: str,
         contract_type: str,
-        missing_clauses: List[str]
+        missing_clauses: List[str],
+        jurisdiction: str = "INDIA"
     ) -> Dict[str, Any]:
         """
         Use Groq LLM to generate improvement suggestions.
@@ -629,6 +796,7 @@ class ContractAnalysisService:
             contract_text: Full text extracted from PDF
             contract_type: Type of contract
             missing_clauses: List of missing clause types
+            jurisdiction: Jurisdiction for contract (defaults to INDIA)
         
         Returns:
             Validated suggestions data dictionary
@@ -639,17 +807,29 @@ class ContractAnalysisService:
             # Prepare prompt
             prompt = PromptTemplate.from_template(SUGGESTIONS_PROMPT)
             
-            # Create chain
-            chain = prompt | self.llm | JsonOutputParser()
+            # Create chain WITHOUT JsonOutputParser - we'll parse manually
+            chain = prompt | self.llm
             
-            # Invoke the chain
-            response = chain.invoke({
+            # Invoke the chain with all required variables
+            llm_output = chain.invoke({
+                "contract_text": contract_text[:5000],
                 "contract_type": contract_type,
-                "jurisdiction": "INDIA",
-                "missing_clauses": ", ".join(missing_clauses[:5])
+                "jurisdiction": jurisdiction
             })
             
             logger.debug("Received suggestions response from LLM")
+            
+            # Extract text content from LLM output
+            if hasattr(llm_output, 'content'):
+                raw_text = llm_output.content
+            else:
+                raw_text = str(llm_output)
+            
+            # Clean the JSON output (remove markdown code fences)
+            clean_text = clean_json_output(raw_text)
+            
+            # Parse JSON manually
+            response = json.loads(clean_text)
             
             # Validate response using Pydantic
             validated_suggestions = SuggestionsOutput(**response)

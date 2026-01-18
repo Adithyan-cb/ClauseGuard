@@ -5,12 +5,20 @@ Handles vector database operations for storing and searching standard clauses.
 Uses ChromaDB for efficient semantic similarity search.
 """
 
-import chromadb
 import os
 import logging
 from django.conf import settings as django_settings
 
 logger = logging.getLogger(__name__)
+
+# Try to import chromadb, but gracefully handle if dependencies are missing
+try:
+    import chromadb
+    CHROMADB_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"ChromaDB or its dependencies not available: {str(e)}")
+    logger.warning("Clause similarity search will be disabled. Install with: pip install chromadb")
+    CHROMADB_AVAILABLE = False
 
 
 class ChromaManager:
@@ -34,6 +42,14 @@ class ChromaManager:
         
         Storage location: Uses CHROMA_DATA_DIR from Django settings
         """
+        self.available = False
+        self.client = None
+        
+        if not CHROMADB_AVAILABLE:
+            logger.warning("ChromaDB not available - clause similarity search disabled")
+            logger.warning("To enable: pip install chromadb 'sentence-transformers[torch]'")
+            return
+        
         try:
             # Get persist directory from settings or use default
             persist_dir = getattr(
@@ -51,12 +67,15 @@ class ChromaManager:
             # Initialize ChromaDB client with persistent storage using new API
             # Use PersistentClient for persistent storage (non-deprecated way)
             self.client = chromadb.PersistentClient(path=persist_dir)
+            self.available = True
             
             logger.info(f"ChromaDB initialized with storage at: {persist_dir}")
             
         except Exception as e:
             logger.error(f"Error initializing ChromaDB: {str(e)}")
-            raise
+            logger.warning("ChromaDB initialization failed - clause similarity search disabled")
+            self.available = False
+            self.client = None
 
     def get_or_create_collection(self, collection_name: str):
         """
@@ -71,12 +90,17 @@ class ChromaManager:
         
         Returns:
             chromadb.Collection: The collection object for adding/querying clauses
+            None: If ChromaDB is not available
         
         Example:
             >>> manager = ChromaManager()
             >>> collection = manager.get_or_create_collection("service_agreement_india")
             >>> # Use collection to add or search clauses
         """
+        if not self.available or self.client is None:
+            logger.debug(f"ChromaDB not available - cannot create collection '{collection_name}'")
+            return None
+        
         try:
             collection = self.client.get_or_create_collection(
                 name=collection_name,
@@ -87,7 +111,7 @@ class ChromaManager:
             
         except Exception as e:
             logger.error(f"Error accessing collection '{collection_name}': {str(e)}")
-            raise
+            return None
 
     def add_standard_clauses(self, collection_name: str, clauses: list) -> None:
         """
@@ -126,8 +150,15 @@ class ChromaManager:
             ... ]
             >>> manager.add_standard_clauses("service_agreement_india", clauses)
         """
+        if not self.available:
+            logger.debug("ChromaDB not available - skipping clause storage")
+            return
+        
         try:
             collection = self.get_or_create_collection(collection_name)
+            if collection is None:
+                logger.warning(f"Could not get collection '{collection_name}'")
+                return
             
             for i, clause in enumerate(clauses):
                 # Create unique ID for this clause
@@ -202,8 +233,25 @@ class ChromaManager:
             ...     similarity = results["distances"][i]
             ...     print(f"Match {i+1} (similarity: {similarity}): {doc[:50]}...")
         """
+        if not self.available:
+            logger.debug("ChromaDB not available - returning empty results")
+            return {
+                'ids': [],
+                'documents': [],
+                'metadatas': [],
+                'distances': []
+            }
+        
         try:
             collection = self.get_or_create_collection(collection_name)
+            if collection is None:
+                logger.warning(f"Could not get collection '{collection_name}'")
+                return {
+                    'ids': [],
+                    'documents': [],
+                    'metadatas': [],
+                    'distances': []
+                }
             
             # Perform similarity search
             results = collection.query(
@@ -260,6 +308,10 @@ class ChromaManager:
             >>> manager = ChromaManager()
             >>> manager.delete_collection("service_agreement_india")
         """
+        if not self.available or self.client is None:
+            logger.debug("ChromaDB not available - cannot delete collection")
+            return
+        
         try:
             self.client.delete_collection(name=collection_name)
             logger.info(f"Deleted collection: {collection_name}")

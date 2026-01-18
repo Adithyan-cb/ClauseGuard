@@ -31,6 +31,8 @@ IMPORTANT:
 - Include all financial figures and terms
 - Identify the primary obligations of each party
 - Return ONLY valid JSON, no additional text
+- DO NOT wrap the JSON in markdown code fences (no triple backticks)
+- Do NOT include any explanations before or after the JSON
 """
 
 # ============================================================================
@@ -64,6 +66,8 @@ IMPORTANT:
 - Include the FULL text of each clause, not summaries
 - Organize by logical sections if multiple related clauses exist
 - Return ONLY valid JSON, no additional text
+- DO NOT wrap the JSON in markdown code fences (no triple backticks)
+- Do NOT include any explanations before or after the JSON
 """
 
 # ============================================================================
@@ -104,6 +108,8 @@ IMPORTANT:
 - Provide clear, actionable descriptions
 - Include business impact for each risk
 - Return ONLY valid JSON, no additional text
+- DO NOT wrap the JSON in markdown code fences (no triple backticks)
+- Do NOT include any explanations before or after the JSON
 """
 
 # ============================================================================
@@ -144,6 +150,8 @@ IMPORTANT:
 - Use HIGH priority only for critical improvements
 - Include specific, relevant language in suggested_text
 - Return ONLY valid JSON, no additional text
+- DO NOT wrap the JSON in markdown code fences (no triple backticks)
+- Do NOT include any explanations before or after the JSON
 """
 
 # ============================================================================
@@ -185,7 +193,8 @@ def get_clause_extraction_prompt(contract_text: str) -> str:
 def get_risk_analysis_prompt(
     contract_type: str,
     jurisdiction: str,
-    contract_text: str
+    contract_text: str,
+    chromadb_comparisons: str = ""
 ) -> str:
     """
     Generate a risk analysis prompt with variables filled in.
@@ -194,6 +203,7 @@ def get_risk_analysis_prompt(
         contract_type (str): Type of contract (e.g., "Service Agreement")
         jurisdiction (str): Jurisdiction (e.g., "India", "US", "UK")
         contract_text (str): The full text of the contract
+        chromadb_comparisons (str): Standard clauses for comparison (optional)
     
     Returns:
         str: The complete prompt ready to send to the LLM
@@ -208,7 +218,8 @@ def get_risk_analysis_prompt(
 def get_suggestions_prompt(
     contract_type: str,
     jurisdiction: str,
-    contract_text: str
+    contract_text: str,
+    missing_clauses: list = None
 ) -> str:
     """
     Generate an improvement suggestions prompt with variables filled in.
@@ -217,6 +228,7 @@ def get_suggestions_prompt(
         contract_type (str): Type of contract (e.g., "Service Agreement")
         jurisdiction (str): Jurisdiction (e.g., "India", "US", "UK")
         contract_text (str): The full text of the contract
+        missing_clauses (list): List of missing clauses (optional)
     
     Returns:
         str: The complete prompt ready to send to the LLM
