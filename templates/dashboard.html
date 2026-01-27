@@ -67,6 +67,8 @@
             background-color: #dc3545;
             padding: 8px 16px;
             border-radius: 4px;
+            color: white;
+            text-decoration: none;
         }
 
         .logout-btn:hover {
@@ -250,30 +252,10 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-brand">
-            <i class="fas fa-file-contract"></i>
+            <i class="fas fa-shield-alt"></i>
             ClauseGuard
         </div>
-        <div class="nav-links">
-            <a href="{% url 'user-dashboard' %}" class="active">
-                <i class="fas fa-home"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="{% url 'view-contracts' %}">
-                <i class="fas fa-file-contract"></i>
-                <span>View Contracts</span>
-            </a>
-            <a href="{% url 'upload-contract' %}">
-                <i class="fas fa-upload"></i>
-                <span>Upload Contract</span>
-            </a>
-            <a href="{% url 'send-complaint' %}">
-                <i class="fas fa-exclamation-circle"></i>
-                <span>Send Complaint</span>
-            </a>
-            <a href="{% url 'send-feedback' %}">
-                <i class="fas fa-comment-dots"></i>
-                <span>Submit Feedback</span>
-            </a>
+       
             <a href="{% url 'logout' %}" class="logout-btn">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Log Out</span>
