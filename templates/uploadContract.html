@@ -148,9 +148,9 @@
             border-radius: 8px;
             padding: 25px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            max-width: 700px;
+            max-width: auto;
             margin: 0 auto;
-            border-top: 3px solid #d4af37;
+            border:none;
         }
 
         .form-group {
@@ -871,43 +871,7 @@
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="user-profile">
-            <div class="profile-img">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="user-name">{% if request.user.is_authenticated %}{{request.user.username}}{% endif %}</div>
-            <div class="user-role">Standard User</div>
-        </div>
-
-        <div class="nav-menu">
-            <a href="dashboard.html" class="nav-item">
-                <i class="fas fa-home"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="view_contracts.html" class="nav-item">
-                <i class="fas fa-file-contract"></i>
-                <span>View Contracts</span>
-            </a>
-            <a href="upload_contract.html" class="nav-item active">
-                <i class="fas fa-upload"></i>
-                <span>Upload Contract</span>
-            </a>
-            <a href="send_complaint.html" class="nav-item">
-                <i class="fas fa-exclamation-circle"></i>
-                <span>Send Complaint</span>
-            </a>
-            <a href="submit_feedback.html" class="nav-item">
-                <i class="fas fa-comment-dots"></i>
-                <span>Submit Feedback</span>
-            </a>
-        </div>
-
-        <a href="#" class="logout">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Log Out</span>
-        </a>
-    </div>
+   
 
     <div class="content-area">
         <div class="content-header">
@@ -955,11 +919,11 @@
                     <label for="contract-type">Contract Type</label>
                     <select id="contract-type" name="contract_type" class="form-control" required>
                         <option value="">Select contract type</option>
-                        <option value="service">Service Agreement</option>
-                        <option value="employment">Employment Contract</option>
-                        <option value="partnership">Partnership Agreement</option>
-                        <option value="nda">Non-Disclosure Agreement</option>
-                        <option value="vendor">Vendor Contract</option>
+                        <option value="service agreement">Service Agreement</option>
+                        <option value="employment contract">Employment Contract</option>
+                        <option value="partnership agreement">Partnership Agreement</option>
+                        <option value="nda">NDA</option>
+                       
                     </select>
                 </div>
 
