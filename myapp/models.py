@@ -7,7 +7,7 @@ class Contract(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="contracts")
     contract_file = models.FileField(upload_to='contracts/')
     llm_model = models.CharField(max_length=50)
-    contract_type = models.CharField(max_length=50)
+    contract_type = models.CharField(max_length=100)  # Increased from 50 to 100
     jurisdiction = models.CharField(max_length=50)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 

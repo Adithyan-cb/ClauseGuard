@@ -265,43 +265,7 @@
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="user-profile">
-            <div class="profile-img">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="user-name">{% if request.user.is_authenticated %}{{request.user.username}}{% endif %}</div>
-            <div class="user-role">Standard User</div>
-        </div>
-
-        <div class="nav-menu">
-            <a href="dashboard.html" class="nav-item">
-                <i class="fas fa-home"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="view_contracts.html" class="nav-item active">
-                <i class="fas fa-file-contract"></i>
-                <span>View Contracts</span>
-            </a>
-            <a href="upload_contract.html" class="nav-item">
-                <i class="fas fa-upload"></i>
-                <span>Upload Contract</span>
-            </a>
-            <a href="send_complaint.html" class="nav-item">
-                <i class="fas fa-exclamation-circle"></i>
-                <span>Send Complaint</span>
-            </a>
-            <a href="submit_feedback.html" class="nav-item">
-                <i class="fas fa-comment-dots"></i>
-                <span>Submit Feedback</span>
-            </a>
-        </div>
-
-        <a href="#" class="logout">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Log Out</span>
-        </a>
-    </div>
+    
 
     <div class="content-area">
         <div class="content-header">

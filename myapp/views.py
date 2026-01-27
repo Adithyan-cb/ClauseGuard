@@ -94,7 +94,42 @@ def admin_dashboard(request):
 
 @login_required(login_url='login')
 def user_dashboard(request):
-    return render(request,'dashboard.html')
+    # Get contract counts by type for the current user
+    contracts = Contract.objects.filter(user=request.user)
+    
+    # Map contract types with display names and underscore keys
+    contract_types = {
+        'service_agreement': 'Service Agreement',
+        'partnership_agreement': 'Partnership Agreement',
+        'employment_contract': 'Employment Contract',
+        'nda': 'NDA'
+    }
+    
+    contract_stats = {}
+    
+    # Initialize all contract types with 0 count (handles new users with no contracts)
+    for key in contract_types.keys():
+        contract_stats[key] = 0
+    
+    # Count contracts by type (case-insensitive)
+    for contract in contracts:
+        contract_type_lower = contract.contract_type.lower().strip()
+        
+        # Match contract types
+        if 'service agreement' in contract_type_lower:
+            contract_stats['service_agreement'] += 1
+        elif 'partnership agreement' in contract_type_lower:
+            contract_stats['partnership_agreement'] += 1
+        elif 'employment contract' in contract_type_lower or 'employment' in contract_type_lower:
+            contract_stats['employment_contract'] += 1
+        elif 'nda' in contract_type_lower:
+            contract_stats['nda'] += 1
+    
+    context = {
+        'contract_stats': contract_stats
+    }
+    
+    return render(request,'dashboard.html', context)
 
 @login_required(login_url='login')
 def view_contracts(request):
