@@ -20,10 +20,12 @@ import os
 import re
 from datetime import datetime
 from typing import Dict, List, Any, Optional
+from io import BytesIO
 
 # Django imports
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
 
 # LangChain imports for Groq LLM
 from langchain_groq import ChatGroq
@@ -36,6 +38,7 @@ from myapp.models import Contract, ContractAnalysis
 from myapp.services.contract_processor import ContractProcessor
 from myapp.services.chroma_manager import ChromaManager
 from myapp.services.contract_clause_mapping import ContractClauseMapper
+from myapp.services.pdf_generator import generate_analysis_pdf
 from myapp.services.prompts import (
     SUMMARY_PROMPT,
     CLAUSE_EXTRACTION_PROMPT,
@@ -858,7 +861,7 @@ class ContractAnalysisService:
         processing_time: float
     ) -> ContractAnalysis:
         """
-        Save all analysis results to database.
+        Save all analysis results to database and generate PDF report.
         
         Args:
             contract_analysis: ContractAnalysis database object
@@ -872,23 +875,44 @@ class ContractAnalysisService:
             Updated ContractAnalysis object
         """
         try:
-            # Convert all data to JSON strings
-            contract_analysis.summary = json.dumps(summary)
-            contract_analysis.clauses = json.dumps(clauses)
-            contract_analysis.risks = json.dumps(risks)
-            contract_analysis.suggestions = json.dumps(suggestions)
+            # Generate PDF report from analysis data
+            logger.info("Generating PDF report from analysis data...")
+            analysis_data = {
+                'summary': summary,
+                'clauses': clauses,
+                'risks': risks,
+                'suggestions': suggestions
+            }
+            
+            contract_name = contract_analysis.contract.contract_file.name
+            pdf_buffer = generate_analysis_pdf(analysis_data, contract_name)
+            
+            # Save PDF to ContractAnalysis model
+            pdf_filename = f"analysis_{contract_analysis.contract.id}_{int(time.time())}.pdf"
+            contract_analysis.analysis_pdf.save(
+                pdf_filename,
+                ContentFile(pdf_buffer.getvalue()),
+                save=True
+            )
+            logger.info(f"  ✓ PDF saved: {pdf_filename}")
             
             # Update metadata
-            contract_analysis.extraction_status = 'completed'
             contract_analysis.processing_time = processing_time
             contract_analysis.analysed_at = datetime.now()
+            contract_analysis.error_message = None
             
             # Save to database
             contract_analysis.save()
             
-            logger.info(f"Successfully saved analysis {contract_analysis.id} to database")
+            logger.info(f"Successfully saved analysis {contract_analysis.id} to database with PDF")
             return contract_analysis
         
         except Exception as e:
-            logger.error(f"Error saving analysis results: {str(e)}")
+            logger.error(f"Error saving analysis results: {str(e)}", exc_info=True)
+            # Update error status
+            try:
+                contract_analysis.error_message = str(e)
+                contract_analysis.save()
+            except:
+                pass
             raise
