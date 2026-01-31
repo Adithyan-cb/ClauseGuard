@@ -16,3 +16,6 @@ groq
 chromadb
 python-dotenv
 pydantic
+
+# PDF generation
+reportlab
