@@ -133,12 +133,30 @@ def user_dashboard(request):
 
 @login_required(login_url='login')
 def view_contracts(request):
-    # Fetch all contracts for the logged-in user
-    contracts = Contract.objects.filter(user=request.user).order_by('-uploaded_at')
+    # Fetch all analyses for the logged-in user's contracts
+    analyses = ContractAnalysis.objects.filter(
+        contract__user=request.user
+    ).select_related('contract').order_by('-analysed_at')
+    
+    # Prepare data for template
+    analysis_data = []
+    for analysis in analyses:
+        analysis_data.append({
+            'analysis_id': analysis.id,
+            'contract_id': analysis.contract.id,
+            'contract_type': analysis.contract.contract_type,
+            'jurisdiction': analysis.contract.jurisdiction,
+            'uploaded_at': analysis.contract.uploaded_at,
+            'analysed_at': analysis.analysed_at,
+            'has_pdf': bool(analysis.analysis_pdf),
+            'error_message': analysis.error_message,
+            'processing_time': analysis.processing_time
+        })
+    
     context = {
-        'contracts': contracts
+        'analyses': analysis_data
     }
-    return render(request,'viewContracts.html', context)
+    return render(request, 'viewContracts.html', context)
 
 @login_required(login_url='login')
 def upload_contract(request):
@@ -579,8 +597,7 @@ def upload_and_analyze_contract(request):
         logger.info(f"✓ Contract created with ID: {contract.id}")
         
         contract_analysis = ContractAnalysis.objects.create(
-            contract=contract,
-            extraction_status='processing'
+            contract=contract
         )
         logger.info(f"✓ ContractAnalysis created with ID: {contract_analysis.id}")
         
@@ -654,13 +671,10 @@ def get_analysis_results(request, analysis_id):
         {
             "status": "success",
             "data": {
-                "analysis_status": "completed" | "processing" | "pending" | "failed",
-                "summary": {...},
-                "clauses": {...},
-                "risks": {...},
-                "suggestions": {...},
+                "has_pdf": true/false,
                 "processing_time": 45.3,
-                "error_message": null
+                "error_message": null,
+                "analysed_at": "2026-01-31T..."
             }
         }
     """
@@ -675,44 +689,13 @@ def get_analysis_results(request, analysis_id):
                 'message': 'Permission denied'
             }, status=403)
         
-        # Parse JSON fields
-        summary = {}
-        clauses = {}
-        risks = {}
-        suggestions = {}
-        
-        if contract_analysis.summary:
-            try:
-                summary = json.loads(contract_analysis.summary)
-            except json.JSONDecodeError:
-                logger.warning(f"Invalid JSON in summary for analysis {analysis_id}")
-        
-        if contract_analysis.clauses:
-            try:
-                clauses = json.loads(contract_analysis.clauses)
-            except json.JSONDecodeError:
-                logger.warning(f"Invalid JSON in clauses for analysis {analysis_id}")
-        
-        if contract_analysis.risks:
-            try:
-                risks = json.loads(contract_analysis.risks)
-            except json.JSONDecodeError:
-                logger.warning(f"Invalid JSON in risks for analysis {analysis_id}")
-        
-        if contract_analysis.suggestions:
-            try:
-                suggestions = json.loads(contract_analysis.suggestions)
-            except json.JSONDecodeError:
-                logger.warning(f"Invalid JSON in suggestions for analysis {analysis_id}")
+        # Check if PDF exists (analysis is complete)
+        has_pdf = bool(contract_analysis.analysis_pdf)
         
         return JsonResponse({
             'status': 'success',
             'data': {
-                'analysis_status': contract_analysis.extraction_status,
-                'summary': summary,
-                'clauses': clauses,
-                'risks': risks,
-                'suggestions': suggestions,
+                'has_pdf': has_pdf,
                 'processing_time': contract_analysis.processing_time,
                 'error_message': contract_analysis.error_message,
                 'analysed_at': contract_analysis.analysed_at.isoformat() if contract_analysis.analysed_at else None
@@ -788,4 +771,123 @@ def get_user_contracts(request):
         return JsonResponse({
             'status': 'error',
             'message': f'Error fetching contracts: {str(e)}'
+        }, status=500)
+
+
+@login_required(login_url='login')
+@require_http_methods(["GET"])
+def view_analysis_pdf(request, analysis_id):
+    """
+    Endpoint: GET /api/analysis/<analysis_id>/pdf/
+    
+    View analysis PDF in browser (inline).
+    
+    Returns: PDF file as inline content
+    """
+    try:
+        # Get analysis record
+        contract_analysis = get_object_or_404(ContractAnalysis, id=analysis_id)
+        
+        # Check permissions - user can only see their own analyses
+        if contract_analysis.contract.user != request.user:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Permission denied'
+            }, status=403)
+        
+        # Check if PDF exists
+        if not contract_analysis.analysis_pdf:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Analysis PDF not yet generated'
+            }, status=404)
+        
+        # Check if file exists
+        if not os.path.exists(contract_analysis.analysis_pdf.path):
+            return JsonResponse({
+                'status': 'error',
+                'message': 'PDF file not found'
+            }, status=404)
+        
+        # Return PDF file as inline content (opens in browser)
+        response = FileResponse(
+            open(contract_analysis.analysis_pdf.path, 'rb'),
+            content_type='application/pdf'
+        )
+        response['Content-Disposition'] = f'inline; filename="analysis_{contract_analysis.id}.pdf"'
+        
+        logger.info(f"User {request.user.username} viewing analysis PDF {analysis_id}")
+        return response
+    
+    except ContractAnalysis.DoesNotExist:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Analysis not found'
+        }, status=404)
+    
+    except Exception as e:
+        logger.error(f"Error viewing analysis PDF: {str(e)}", exc_info=True)
+        return JsonResponse({
+            'status': 'error',
+            'message': f'Error viewing PDF: {str(e)}'
+        }, status=500)
+
+
+@login_required(login_url='login')
+@require_http_methods(["GET"])
+def download_analysis_pdf(request, analysis_id):
+    """
+    Endpoint: GET /api/analysis/<analysis_id>/download/
+    
+    Download analysis PDF as attachment.
+    
+    Returns: PDF file as attachment (downloaded)
+    """
+    try:
+        # Get analysis record
+        contract_analysis = get_object_or_404(ContractAnalysis, id=analysis_id)
+        
+        # Check permissions - user can only see their own analyses
+        if contract_analysis.contract.user != request.user:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Permission denied'
+            }, status=403)
+        
+        # Check if PDF exists
+        if not contract_analysis.analysis_pdf:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Analysis PDF not yet generated'
+            }, status=404)
+        
+        # Check if file exists
+        if not os.path.exists(contract_analysis.analysis_pdf.path):
+            return JsonResponse({
+                'status': 'error',
+                'message': 'PDF file not found'
+            }, status=404)
+        
+        # Return PDF file as attachment (download)
+        contract_name = contract_analysis.contract.contract_type.replace(' ', '_')
+        response = FileResponse(
+            open(contract_analysis.analysis_pdf.path, 'rb'),
+            content_type='application/pdf'
+        )
+        response['Content-Disposition'] = f'attachment; filename="analysis_{contract_name}_{contract_analysis.id}.pdf"'
+        
+        logger.info(f"User {request.user.username} downloading analysis PDF {analysis_id}")
+        return response
+    
+    except ContractAnalysis.DoesNotExist:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Analysis not found'
+        }, status=404)
+    
+    except Exception as e:
+        logger.error(f"Error downloading analysis PDF: {str(e)}", exc_info=True)
+        return JsonResponse({
+            'status': 'error',
+            'message': f'Error downloading PDF: {str(e)}'
         }, status=500)
