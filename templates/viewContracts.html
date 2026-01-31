@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Contracts</title>
+    <title>View Analysis Reports</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -269,7 +269,7 @@
 
     <div class="content-area">
         <div class="content-header">
-            <h1>View Contracts</h1>
+            <h1>Analysis Reports</h1>
             <a href="{%url 'user-dashboard' %}" class="back-btn">
                 <i class="fas fa-arrow-left"></i>
                 <span>Back to Dashboard</span>
@@ -278,7 +278,7 @@
 
         <div class="contracts-container">
             <div class="search-bar">
-                <input type="text" class="search-input" id="searchInput" placeholder="Search contracts...">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search analyses...">
                 <button class="search-btn" onclick="searchContracts()">
                     <i class="fas fa-search"></i>
                 </button>
@@ -287,32 +287,47 @@
             <table class="contracts-table">
                 <thead>
                     <tr>
-                        <th>Contract ID</th>
-                        <th>Type</th>
+                        <th>Analysis ID</th>
+                        <th>Contract Type</th>
                         <th>Jurisdiction</th>
-                        <th>Upload Date</th>
+                        <th>Analysis Date</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% if contracts %}
-                        {% for contract in contracts %}
+                    {% if analyses %}
+                        {% for analysis in analyses %}
                         <tr>
-                            <td>#CT{{ contract.id }}</td>
-                            <td>{{ contract.contract_type }}</td>
-                            <td>{{ contract.jurisdiction }}</td>
-                            <td>{{ contract.uploaded_at|date:"Y-m-d" }}</td>
+                            <td>#AN{{ analysis.analysis_id }}</td>
+                            <td>{{ analysis.contract_type }}</td>
+                            <td>{{ analysis.jurisdiction }}</td>
+                            <td>{{ analysis.analysed_at|date:"Y-m-d H:i" }}</td>
                             <td>
-                                <button class="action-btn view" onclick="viewContract({{ contract.id }})">View</button>
-                                <button class="action-btn download" onclick="downloadContract({{ contract.id }})">Download</button>
+                                {% if analysis.has_pdf %}
+                                    <span class="status approved">✓ Completed</span>
+                                {% elif analysis.error_message %}
+                                    <span class="status rejected">✗ Failed</span>
+                                {% else %}
+                                    <span class="status pending">⏳ Processing</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if analysis.has_pdf %}
+                                    <button class="action-btn view" onclick="viewAnalysisPDF({{ analysis.analysis_id }})">View PDF</button>
+                                    <button class="action-btn download" onclick="downloadAnalysisPDF({{ analysis.analysis_id }})">Download</button>
+                                {% else %}
+                                    <button class="action-btn view" disabled style="opacity: 0.5;">View PDF</button>
+                                    <button class="action-btn download" disabled style="opacity: 0.5;">Download</button>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="5" style="text-align: center; padding: 30px; color: #999;">
+                            <td colspan="6" style="text-align: center; padding: 30px; color: #999;">
                                 <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 10px;"></i>
-                                <p>No contracts found. <a href="{% url 'upload-contract' %}" style="color: #d4af37; text-decoration: none;">Upload your first contract</a></p>
+                                <p>No analyses found. <a href="{% url 'upload-contract' %}" style="color: #d4af37; text-decoration: none;">Upload your first contract</a></p>
                             </td>
                         </tr>
                     {% endif %}
@@ -322,15 +337,15 @@
     </div>
 
     <script>
-        function viewContract(contractId) {
-            // Open contract in a new tab/window
-            const viewUrl = `{% url 'view-contract' contract_id=0 %}`.replace('0', contractId);
+        function viewAnalysisPDF(analysisId) {
+            // Open analysis PDF in a new tab
+            const viewUrl = `/api/analysis/${analysisId}/pdf/`;
             window.open(viewUrl, '_blank');
         }
 
-        function downloadContract(contractId) {
-            // Trigger download of the contract
-            const downloadUrl = `{% url 'download-contract' contract_id=0 %}`.replace('0', contractId);
+        function downloadAnalysisPDF(analysisId) {
+            // Download the analysis PDF
+            const downloadUrl = `/api/analysis/${analysisId}/download/`;
             window.location.href = downloadUrl;
         }
 
@@ -339,8 +354,8 @@
             const tableRows = document.querySelectorAll('.contracts-table tbody tr');
             
             tableRows.forEach(row => {
-                // Skip the "no contracts" message row
-                if (row.querySelector('td[colspan="5"]')) {
+                // Skip the "no analyses" message row
+                if (row.querySelector('td[colspan="6"]')) {
                     return;
                 }
                 
