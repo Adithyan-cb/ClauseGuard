@@ -18,6 +18,7 @@ import logging
 import time
 import os
 import re
+from threading import Thread
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from io import BytesIO
@@ -38,7 +39,6 @@ from myapp.models import Contract, ContractAnalysis
 from myapp.services.contract_processor import ContractProcessor
 from myapp.services.chroma_manager import ChromaManager
 from myapp.services.contract_clause_mapping import ContractClauseMapper
-from myapp.services.pdf_generator import generate_analysis_pdf
 from myapp.services.prompts import (
     SUMMARY_PROMPT,
     CLAUSE_EXTRACTION_PROMPT,
@@ -318,7 +318,7 @@ class ContractAnalysisService:
                 raise
             
             # ==================== STEP 8: SAVE RESULTS ====================
-            logger.info("[STEP 8/7] Saving analysis results to database...")
+            logger.info("[STEP 8/8] Saving analysis results to database...")
             processing_time = time.time() - start_time
             
             contract_analysis = self._save_analysis_results(
@@ -446,8 +446,12 @@ class ContractAnalysisService:
         try:
             extracted_text = self.processor.extract_text_from_pdf(contract_path)
             
-            if not extracted_text or len(extracted_text.strip()) < 100:
-                raise ValueError("PDF appears to be empty or unreadable")
+            # Validate extracted text has meaningful content
+            if not extracted_text or len(extracted_text.strip()) < 50:
+                raise ValueError(
+                    "PDF text extraction resulted in insufficient content. "
+                    "Please ensure the PDF contains readable text (not just images/scans)."
+                )
             
             return extracted_text
         
@@ -861,7 +865,8 @@ class ContractAnalysisService:
         processing_time: float
     ) -> ContractAnalysis:
         """
-        Save all analysis results to database and generate PDF report.
+        Save analysis results to database WITHOUT generating PDF.
+        PDF will be generated asynchronously in a separate thread.
         
         Args:
             contract_analysis: ContractAnalysis database object
@@ -875,28 +880,15 @@ class ContractAnalysisService:
             Updated ContractAnalysis object
         """
         try:
-            # Generate PDF report from analysis data
-            logger.info("Generating PDF report from analysis data...")
-            analysis_data = {
-                'summary': summary,
-                'clauses': clauses,
-                'risks': risks,
-                'suggestions': suggestions
-            }
+            logger.info("Saving analysis data to database (WITHOUT PDF generation)...")
             
-            contract_name = contract_analysis.contract.contract_file.name
-            pdf_buffer = generate_analysis_pdf(analysis_data, contract_name)
+            # Store analysis data as JSON for frontend display
+            contract_analysis.summary = summary
+            contract_analysis.clauses = clauses
+            contract_analysis.risks = risks
+            contract_analysis.suggestions = suggestions
             
-            # Save PDF to ContractAnalysis model
-            pdf_filename = f"analysis_{contract_analysis.contract.id}_{int(time.time())}.pdf"
-            contract_analysis.analysis_pdf.save(
-                pdf_filename,
-                ContentFile(pdf_buffer.getvalue()),
-                save=True
-            )
-            logger.info(f"  ✓ PDF saved: {pdf_filename}")
-            
-            # Update metadata
+            # Store metadata
             contract_analysis.processing_time = processing_time
             contract_analysis.analysed_at = datetime.now()
             contract_analysis.error_message = None
@@ -904,7 +896,7 @@ class ContractAnalysisService:
             # Save to database
             contract_analysis.save()
             
-            logger.info(f"Successfully saved analysis {contract_analysis.id} to database with PDF")
+            logger.info(f"Successfully saved analysis {contract_analysis.id} to database (PDF pending)")
             return contract_analysis
         
         except Exception as e:
@@ -916,3 +908,4 @@ class ContractAnalysisService:
             except:
                 pass
             raise
+    
