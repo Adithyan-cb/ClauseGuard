@@ -4,7 +4,7 @@ from .views import (
     upload_contract, send_complaint, feedback, user_logout, view_contract, 
     download_contract, get_users_ajax, get_contracts_ajax, get_complaints_ajax, 
     get_feedback_ajax, upload_and_analyze_contract, get_analysis_results, 
-    get_user_contracts, view_analysis_pdf, download_analysis_pdf
+    get_user_contracts, get_analysis_data
 )
 
 urlpatterns = [
@@ -30,7 +30,6 @@ urlpatterns = [
    # Phase 6: Contract Analysis API Endpoints
    path('api/upload-contract/', upload_and_analyze_contract, name='api-upload-contract'),
    path('api/analysis/<int:analysis_id>/', get_analysis_results, name='api-get-analysis'),
-   path('api/analysis/<int:analysis_id>/pdf/', view_analysis_pdf, name='api-view-analysis-pdf'),
-   path('api/analysis/<int:analysis_id>/download/', download_analysis_pdf, name='api-download-analysis-pdf'),
+   path('api/analysis/<int:analysis_id>/data/', get_analysis_data, name='api-get-analysis-data'),
    path('api/contracts/', get_user_contracts, name='api-get-contracts'),
 ]
