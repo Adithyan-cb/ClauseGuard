@@ -22,8 +22,13 @@ class ContractAnalysis(models.Model):
         on_delete=models.CASCADE,
         related_name="analysis",
     )
-    # Generated analysis report PDF
-    analysis_pdf = models.FileField(upload_to='analysis_reports/', blank=True, null=True)
+    # Analysis data (stored as JSON)
+    summary = models.JSONField(null=True, blank=True)
+    clauses = models.JSONField(null=True, blank=True)
+    risks = models.JSONField(null=True, blank=True)
+    suggestions = models.JSONField(null=True, blank=True)
+    
+    # Status fields
     error_message = models.TextField(blank=True, null=True)
     processing_time = models.FloatField(null=True, blank=True)
     analysed_at = models.DateTimeField(auto_now_add=True)
