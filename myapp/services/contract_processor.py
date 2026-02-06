@@ -59,19 +59,28 @@ class ContractProcessor:
             # Open PDF file
             doc = fitz.open(file_path)
             
+            # Check if PDF has pages
+            if doc.page_count == 0:
+                doc.close()
+                raise ValueError("PDF file has no pages")
+            
             # Extract text from all pages
             text = ""
             for page_num in range(doc.page_count):
                 page = doc[page_num]
                 text += f"\n--- Page {page_num + 1} ---\n"
-                text += page.get_text()
+                page_text = page.get_text()
+                text += page_text
             
             # Close the document
             doc.close()
             
             # Validate that we got some text
             if not text.strip():
-                raise ValueError("No text could be extracted from PDF")
+                raise ValueError(
+                    "No text could be extracted from PDF. This might be a scanned document. "
+                    "Please upload a PDF with selectable text or an image-based document that we can process."
+                )
             
             # Log success
             char_count = len(text)
@@ -85,7 +94,10 @@ class ContractProcessor:
             
         except fitz.FileError as e:
             logger.error(f"PDF file error for {file_path}: {str(e)}")
-            raise ValueError(f"Invalid PDF file: {str(e)}")
+            raise ValueError(f"Invalid or corrupted PDF file: {str(e)}")
+        except ValueError:
+            # Re-raise ValueError with our custom messages
+            raise
         except Exception as e:
             logger.error(f"Error extracting PDF {file_path}: {str(e)}")
             raise ValueError(f"Failed to extract text from PDF: {str(e)}")
