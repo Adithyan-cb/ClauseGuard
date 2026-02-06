@@ -1185,24 +1185,40 @@
                     const data = await response.json();
 
                     if (data.status === 'success') {
-                        const analysisStatus = data.data.analysis_status;
+                        const analysisData = data.data;
 
-                        if (analysisStatus === 'completed') {
+                        // Check if analysis results are ready
+                        if (analysisData.error_message === null && analysisData.processing_time !== null) {
+                            // Results are ready - clear interval and show them
                             clearInterval(pollingInterval);
                             completeAllSteps();
-                            displayResults(data.data);
+                            
+                            // Fetch detailed analysis data
+                            try {
+                                const dataResponse = await fetch(`/api/analysis/${analysisId}/data/`, {
+                                    method: 'GET',
+                                    headers: {
+                                        'X-CSRFToken': getCookie('csrftoken')
+                                    }
+                                });
+
+                                if (dataResponse.ok) {
+                                    const analysisDetailData = await dataResponse.json();
+                                    if (analysisDetailData.status === 'success') {
+                                        displayResults(analysisDetailData.data);
+                                    }
+                                }
+                            } catch (error) {
+                                console.error('Error fetching analysis data:', error);
+                            }
+                            
+                            // Hide processing state and show results
                             setTimeout(() => {
                                 document.getElementById('processing-state').style.display = 'none';
                                 document.getElementById('results-state').style.display = 'block';
                                 document.getElementById('total-time').textContent = elapsed;
-                                showNotification('Analysis completed successfully!', 'success');
+                                showNotification('✓ Analysis completed! Results are displayed below.', 'success');
                             }, 500);
-                        } else if (analysisStatus === 'failed') {
-                            clearInterval(pollingInterval);
-                            document.getElementById('processing-state').style.display = 'none';
-                            document.getElementById('error-state').style.display = 'block';
-                            document.getElementById('error-text').textContent = data.data.error_message || 'Analysis failed. Please try again.';
-                            showNotification('Analysis failed', 'error');
                         }
                     }
                 } catch (error) {

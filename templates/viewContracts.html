@@ -240,6 +240,276 @@
             background-color: #0a2342; /* Navy blue */
         }
 
+        /* ===== EXPANDABLE DETAILS CARD STYLES ===== */
+        
+        .details-row {
+            display: none;
+        }
+
+        .details-row.open {
+            display: table-row;
+        }
+
+        .details-cell {
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .details-card {
+            margin: 15px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #d4af37;
+        }
+
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .details-header h3 {
+            color: #0a2342;
+            font-size: 1.3rem;
+        }
+
+        .close-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .close-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* Tab Styles */
+        .tabs-nav {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            border: none;
+            background-color: transparent;
+            color: #666;
+            cursor: pointer;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            color: #0a2342;
+        }
+
+        .tab-button.active {
+            color: #d4af37;
+            border-bottom-color: #d4af37;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Content Styles */
+        .summary-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .info-item {
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 3px solid #d4af37;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #0a2342;
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            color: #555;
+            margin-top: 5px;
+        }
+
+        .clauses-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .clause-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 3px solid #27ae60;
+        }
+
+        .clause-type {
+            font-weight: 600;
+            color: #0a2342;
+        }
+
+        .clause-text {
+            color: #555;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .risks-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .risk-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #ccc;
+        }
+
+        .risk-item.high {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-left-color: #e74c3c;
+        }
+
+        .risk-item.medium {
+            background-color: rgba(243, 156, 18, 0.1);
+            border-left-color: #f39c12;
+        }
+
+        .risk-item.low {
+            background-color: rgba(39, 174, 96, 0.1);
+            border-left-color: #27ae60;
+        }
+
+        .risk-title {
+            font-weight: 600;
+            color: #0a2342;
+        }
+
+        .risk-level {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .risk-level.high {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .risk-level.medium {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .risk-level.low {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .risk-desc {
+            color: #555;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .suggestions-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .suggestion-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 3px solid #3498db;
+        }
+
+        .suggestion-title {
+            font-weight: 600;
+            color: #0a2342;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-priority {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .suggestion-priority.priority-high {
+            background-color: #e74c3c;
+        }
+
+        .suggestion-priority.priority-medium {
+            background-color: #f39c12;
+        }
+
+        .suggestion-priority.priority-low {
+            background-color: #27ae60;
+        }
+
+        .suggestion-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .suggestion-field {
+            font-size: 0.9rem;
+            color: #555;
+            padding: 8px;
+            background-color: white;
+            border-radius: 3px;
+            border-left: 2px solid #3498db;
+        }
+
+        .suggestion-desc {
+            color: #555;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .empty-message {
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            font-style: italic;
+        }
+
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
@@ -304,22 +574,51 @@
                             <td>{{ analysis.jurisdiction }}</td>
                             <td>{{ analysis.analysed_at|date:"Y-m-d H:i" }}</td>
                             <td>
-                                {% if analysis.has_pdf %}
-                                    <span class="status approved">✓ Completed</span>
-                                {% elif analysis.error_message %}
+                                {% if analysis.error_message %}
                                     <span class="status rejected">✗ Failed</span>
+                                {% elif analysis.processing_time %}
+                                    <span class="status approved">✓ Completed</span>
                                 {% else %}
                                     <span class="status pending">⏳ Processing</span>
                                 {% endif %}
                             </td>
                             <td>
-                                {% if analysis.has_pdf %}
-                                    <button class="action-btn view" onclick="viewAnalysisPDF({{ analysis.analysis_id }})">View PDF</button>
-                                    <button class="action-btn download" onclick="downloadAnalysisPDF({{ analysis.analysis_id }})">Download</button>
-                                {% else %}
-                                    <button class="action-btn view" disabled style="opacity: 0.5;">View PDF</button>
-                                    <button class="action-btn download" disabled style="opacity: 0.5;">Download</button>
-                                {% endif %}
+                                <button class="action-btn view" onclick="toggleDetails({{ analysis.analysis_id }}, this)">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Expandable Details Row -->
+                        <tr class="details-row" id="details-{{ analysis.analysis_id }}">
+                            <td colspan="6" class="details-cell">
+                                <div class="details-card">
+                                    <div class="details-header">
+                                        <h3>Analysis Details #AN{{ analysis.analysis_id }}</h3>
+                                        <button class="close-btn" onclick="toggleDetails({{ analysis.analysis_id }}, event.target)">Close</button>
+                                    </div>
+
+                                    <!-- Tabs Navigation -->
+                                    <div class="tabs-nav">
+                                        <button class="tab-button active" onclick="switchTab({{ analysis.analysis_id }}, 'summary')">
+                                            <i class="fas fa-file-alt"></i> Summary
+                                        </button>
+                                        <button class="tab-button" onclick="switchTab({{ analysis.analysis_id }}, 'clauses')">
+                                            <i class="fas fa-list"></i> Clauses
+                                        </button>
+                                        <button class="tab-button" onclick="switchTab({{ analysis.analysis_id }}, 'risks')">
+                                            <i class="fas fa-exclamation-triangle"></i> Risks
+                                        </button>
+                                        <button class="tab-button" onclick="switchTab({{ analysis.analysis_id }}, 'suggestions')">
+                                            <i class="fas fa-lightbulb"></i> Suggestions
+                                        </button>
+                                    </div>
+
+                                    <!-- Tab Content -->
+                                    <div id="summary-{{ analysis.analysis_id }}" class="tab-pane active" data-analysis-id="{{ analysis.analysis_id }}"></div>
+                                    <div id="clauses-{{ analysis.analysis_id }}" class="tab-pane" data-analysis-id="{{ analysis.analysis_id }}"></div>
+                                    <div id="risks-{{ analysis.analysis_id }}" class="tab-pane" data-analysis-id="{{ analysis.analysis_id }}"></div>
+                                    <div id="suggestions-{{ analysis.analysis_id }}" class="tab-pane" data-analysis-id="{{ analysis.analysis_id }}"></div>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -337,18 +636,230 @@
     </div>
 
     <script>
-        function viewAnalysisPDF(analysisId) {
-            // Open analysis PDF in a new tab
-            const viewUrl = `/api/analysis/${analysisId}/pdf/`;
-            window.open(viewUrl, '_blank');
+        // ===== TOGGLE DETAILS CARD =====
+        function toggleDetails(analysisId, btn) {
+            const detailsRow = document.getElementById(`details-${analysisId}`);
+            const isOpen = detailsRow.classList.contains('open');
+
+            // Close any other open details
+            document.querySelectorAll('.details-row.open').forEach(row => {
+                if (row.id !== `details-${analysisId}`) {
+                    row.classList.remove('open');
+                }
+            });
+
+            if (!isOpen) {
+                // Open this details card
+                detailsRow.classList.add('open');
+                // Fetch analysis data if not already loaded
+                fetchAnalysisData(analysisId);
+            } else {
+                // Close this details card
+                detailsRow.classList.remove('open');
+            }
         }
 
-        function downloadAnalysisPDF(analysisId) {
-            // Download the analysis PDF
-            const downloadUrl = `/api/analysis/${analysisId}/download/`;
-            window.location.href = downloadUrl;
+        // ===== SWITCH BETWEEN TABS =====
+        function switchTab(analysisId, tabName) {
+            // Hide all tabs for this analysis
+            document.querySelectorAll(`#summary-${analysisId}, #clauses-${analysisId}, #risks-${analysisId}, #suggestions-${analysisId}`).forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            document.querySelectorAll(`#details-${analysisId} .tab-button`).forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(`${tabName}-${analysisId}`).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.closest('.tab-button').classList.add('active');
         }
 
+        // ===== FETCH ANALYSIS DATA =====
+        function fetchAnalysisData(analysisId) {
+            const summaryDiv = document.getElementById(`summary-${analysisId}`);
+            
+            // Check if data is already loaded
+            if (summaryDiv.innerHTML.trim() !== '') {
+                return; // Already loaded
+            }
+
+            // Show loading message
+            summaryDiv.innerHTML = '<div class="empty-message">Loading...</div>';
+
+            fetch(`/api/analysis/${analysisId}/data/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const analysisData = data.data;
+                        displaySummary(analysisId, analysisData.summary);
+                        displayClauses(analysisId, analysisData.clauses);
+                        displayRisks(analysisId, analysisData.risks);
+                        displaySuggestions(analysisId, analysisData.suggestions);
+                    } else {
+                        summaryDiv.innerHTML = '<div class="empty-message">Error loading data</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    summaryDiv.innerHTML = '<div class="empty-message">Error loading data</div>';
+                });
+        }
+
+        // ===== DISPLAY SUMMARY =====
+        function displaySummary(analysisId, summary) {
+            const summaryDiv = document.getElementById(`summary-${analysisId}`);
+            
+            if (!summary) {
+                summaryDiv.innerHTML = '<div class="empty-message">No summary data available</div>';
+                return;
+            }
+
+            let html = '<div class="summary-info">';
+
+            // Handle both object and string formats
+            const summaryObj = typeof summary === 'string' ? JSON.parse(summary) : summary;
+
+            for (const [key, value] of Object.entries(summaryObj)) {
+                if (value) {
+                    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ');
+                    html += `
+                        <div class="info-item">
+                            <div class="info-label">${label}</div>
+                            <div class="info-value">${value}</div>
+                        </div>
+                    `;
+                }
+            }
+
+            html += '</div>';
+            summaryDiv.innerHTML = html;
+        }
+
+        // ===== DISPLAY CLAUSES =====
+        function displayClauses(analysisId, clauses) {
+            const clausesDiv = document.getElementById(`clauses-${analysisId}`);
+            
+            if (!clauses || (Array.isArray(clauses) && clauses.length === 0)) {
+                clausesDiv.innerHTML = '<div class="empty-message">No clauses found</div>';
+                return;
+            }
+
+            let html = '<ul class="clauses-list">';
+
+            const clausesList = typeof clauses === 'string' ? JSON.parse(clauses) : clauses;
+            
+            // Handle if clauses has a 'clauses' property
+            const clausesArray = clausesList.clauses || clausesList;
+
+            if (Array.isArray(clausesArray)) {
+                clausesArray.forEach((clause, idx) => {
+                    const clauseType = clause.type || clause.clause_type || 'Unknown';
+                    const clauseText = clause.text || clause.clause_text || '';
+                    html += `
+                        <li class="clause-item">
+                            <div class="clause-type">${idx + 1}. ${clauseType}</div>
+                            <div class="clause-text">${clauseText.substring(0, 200)}${clauseText.length > 200 ? '...' : ''}</div>
+                        </li>
+                    `;
+                });
+            }
+
+            html += '</ul>';
+            clausesDiv.innerHTML = html;
+        }
+
+        // ===== DISPLAY RISKS =====
+        function displayRisks(analysisId, risks) {
+            const risksDiv = document.getElementById(`risks-${analysisId}`);
+            
+            if (!risks || (Array.isArray(risks) && risks.length === 0)) {
+                risksDiv.innerHTML = '<div class="empty-message">No risks identified</div>';
+                return;
+            }
+
+            let html = '<ul class="risks-list">';
+
+            const risksList = typeof risks === 'string' ? JSON.parse(risks) : risks;
+            
+            // Handle if risks has a 'risks' property
+            const risksArray = risksList.risks || risksList;
+
+            if (Array.isArray(risksArray)) {
+                risksArray.forEach((risk, idx) => {
+                    const riskLevel = (risk.level || 'medium').toLowerCase();
+                    const riskTitle = risk.title || 'Unknown Risk';
+                    const riskDesc = risk.description || '';
+                    html += `
+                        <li class="risk-item ${riskLevel}">
+                            <div class="risk-title">
+                                ${riskTitle}
+                                <span class="risk-level ${riskLevel}">${riskLevel.toUpperCase()}</span>
+                            </div>
+                            <div class="risk-desc">${riskDesc.substring(0, 200)}${riskDesc.length > 200 ? '...' : ''}</div>
+                        </li>
+                    `;
+                });
+            }
+
+            html += '</ul>';
+            risksDiv.innerHTML = html;
+        }
+
+        // ===== DISPLAY SUGGESTIONS =====
+        function displaySuggestions(analysisId, suggestions) {
+            const suggestionsDiv = document.getElementById(`suggestions-${analysisId}`);
+            
+            if (!suggestions || (Array.isArray(suggestions) && suggestions.length === 0)) {
+                suggestionsDiv.innerHTML = '<div class="empty-message">No suggestions available</div>';
+                return;
+            }
+
+            let html = '<ul class="suggestions-list">';
+
+            const suggestionsList = typeof suggestions === 'string' ? JSON.parse(suggestions) : suggestions;
+            
+            // Handle if suggestions has a 'suggestions' property
+            const suggestionsArray = suggestionsList.suggestions || suggestionsList;
+
+            if (Array.isArray(suggestionsArray)) {
+                suggestionsArray.forEach((suggestion, idx) => {
+                    const priority = suggestion.priority || 'MEDIUM';
+                    const category = suggestion.category || 'General';
+                    const currentState = suggestion.current_state || 'Not mentioned';
+                    const suggestedText = suggestion.suggested_text || '';
+                    const businessImpact = suggestion.business_impact || '';
+                    
+                    html += `
+                        <li class="suggestion-item">
+                            <div class="suggestion-title">
+                                ${idx + 1}. ${category}
+                                <span class="suggestion-priority priority-${priority.toLowerCase()}">${priority}</span>
+                            </div>
+                            <div class="suggestion-content">
+                                <div class="suggestion-field">
+                                    <strong>Current State:</strong> ${currentState}
+                                </div>
+                                <div class="suggestion-field">
+                                    <strong>Suggested:</strong> ${suggestedText.substring(0, 300)}${suggestedText.length > 300 ? '...' : ''}
+                                </div>
+                                <div class="suggestion-field">
+                                    <strong>Impact:</strong> ${businessImpact.substring(0, 250)}${businessImpact.length > 250 ? '...' : ''}
+                                </div>
+                            </div>
+                        </li>
+                    `;
+                });
+            }
+
+            html += '</ul>';
+            suggestionsDiv.innerHTML = html;
+        }
+
+        // ===== SEARCH FUNCTIONALITY =====
         function searchContracts() {
             const searchInput = document.getElementById('searchInput').value.toLowerCase();
             const tableRows = document.querySelectorAll('.contracts-table tbody tr');
