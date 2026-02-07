@@ -6,6 +6,9 @@ from .views import (
     get_feedback_ajax, upload_and_analyze_contract, get_analysis_results, 
     get_user_contracts, get_analysis_data
 )
+from .debug_views import (
+    chromadb_diagnostics, chromadb_collections, chromadb_test_search, chromadb_initialize
+)
 
 urlpatterns = [
    path('', home, name='home'),
@@ -32,4 +35,10 @@ urlpatterns = [
    path('api/analysis/<int:analysis_id>/', get_analysis_results, name='api-get-analysis'),
    path('api/analysis/<int:analysis_id>/data/', get_analysis_data, name='api-get-analysis-data'),
    path('api/contracts/', get_user_contracts, name='api-get-contracts'),
+   
+   # Debug: ChromaDB Diagnostics
+   path('api/debug/chromadb/', chromadb_diagnostics, name='api-chromadb-diagnostics'),
+   path('api/debug/chromadb/collections/', chromadb_collections, name='api-chromadb-collections'),
+   path('api/debug/chromadb/search/', chromadb_test_search, name='api-chromadb-search'),
+   path('api/debug/chromadb/initialize/', chromadb_initialize, name='api-chromadb-initialize'),
 ]
