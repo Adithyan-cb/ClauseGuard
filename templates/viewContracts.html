@@ -790,8 +790,8 @@
 
             if (Array.isArray(risksArray)) {
                 risksArray.forEach((risk, idx) => {
-                    const riskLevel = (risk.level || 'medium').toLowerCase();
-                    const riskTitle = risk.title || 'Unknown Risk';
+                    const riskLevel = (risk.risk_level || 'MEDIUM').toLowerCase();
+                    const riskTitle = risk.issue || 'Unknown Risk';
                     const riskDesc = risk.description || '';
                     html += `
                         <li class="risk-item ${riskLevel}">

@@ -617,7 +617,7 @@ class ContractAnalysisService:
                 return {}
             
             # Normalize contract type for ChromaDB collection name
-            collection_name = f"{contract_type.lower()}"
+            collection_name = f"{contract_type}"
             
             # Get or create collection
             try:

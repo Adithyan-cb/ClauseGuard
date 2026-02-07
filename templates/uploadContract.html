@@ -904,39 +904,21 @@
                     <span>Additional Information</span>
                 </div>
 
-                <div class="form-group">
-                    <label for="llm-model">Select LLM Model</label>
-                    <select id="llm-model" name="llm_model" class="form-control" >
-                        <option value="">Select LLM model</option>
-                        <option value="gpt-4">GPT-oss-20b</option>
-                        <option value="gpt-3.5">GPT-oss-120b</option>
-                        <option value="llama-2">Llama 3</option>
-                        <option value="gemini">Gemini</option>
-                    </select>
-                </div>
+               
 
                 <div class="form-group">
                     <label for="contract-type">Contract Type</label>
                     <select id="contract-type" name="contract_type" class="form-control" required>
                         <option value="">Select contract type</option>
-                        <option value="service agreement">Service Agreement</option>
-                        <option value="employment contract">Employment Contract</option>
-                        <option value="partnership agreement">Partnership Agreement</option>
-                        <option value="nda">NDA</option>
+                        <option value="SERVICE_AGREEMENT">Service Agreement</option>
+                        <option value="EMPLOYMENT_CONTRACT">Employment Contract</option>
+                        <option value="PARTNERSHIP_AGREEMENT">Partnership Agreement</option>
+                        <option value="NDA">NDA</option>
                        
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="jurisdiction">Jurisdiction</label>
-                    <select id="jurisdiction" name="jurisdiction" class="form-control" required>
-                        <option value="">Select Jurisdiction</option>
-                        <option value="India">India</option>
-                        <option value="United States">United States</option>
-                        <option value="United Kingdom">United Kingdom</option>
-                        <option value="Japan">Japan</option>
-                    </select>
-                </div>
+               
 
                 <button type="submit" class="submit-btn" id="submit-btn">
                     <i class="fas fa-upload"></i>
@@ -1078,9 +1060,9 @@
             e.preventDefault();
 
             const fileInput = document.getElementById('contract-file');
-            const llmModel = document.getElementById('llm-model').value;
+            const llmModel = "llama-3.3-70b-versatile"
             const contractType = document.getElementById('contract-type').value;
-            const jurisdiction = document.getElementById('jurisdiction').value;
+            const jurisdiction = "INDIA"
             const submitBtn = document.getElementById('submit-btn');
             const notification = document.getElementById('notification');
 
@@ -1090,7 +1072,7 @@
                 return;
             }
 
-            if (!llmModel || !contractType || !jurisdiction) {
+            if (!contractType) {
                 showNotification('Please fill in all required fields', 'error');
                 return;
             }

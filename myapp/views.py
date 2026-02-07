@@ -115,12 +115,12 @@ def user_dashboard(request):
     for contract in contracts:
         contract_type_lower = contract.contract_type.lower().strip()
         
-        # Match contract types
-        if 'service agreement' in contract_type_lower:
+        # Match contract types (handles both underscore and space separated formats)
+        if 'service_agreement' in contract_type_lower or 'service agreement' in contract_type_lower:
             contract_stats['service_agreement'] += 1
-        elif 'partnership agreement' in contract_type_lower:
+        elif 'partnership_agreement' in contract_type_lower or 'partnership agreement' in contract_type_lower:
             contract_stats['partnership_agreement'] += 1
-        elif 'employment contract' in contract_type_lower or 'employment' in contract_type_lower:
+        elif 'employment_contract' in contract_type_lower or 'employment contract' in contract_type_lower or 'employment' in contract_type_lower:
             contract_stats['employment_contract'] += 1
         elif 'nda' in contract_type_lower:
             contract_stats['nda'] += 1
