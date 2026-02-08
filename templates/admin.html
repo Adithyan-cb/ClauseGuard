@@ -255,11 +255,7 @@
         </div>
 
         <div class="nav-menu">
-            <div class="nav-item active" data-section="legal-contacts">
-                <i class="fas fa-address-book"></i>
-                <span>View legal Contacts</span>
-            </div>
-            <div class="nav-item" data-section="users">
+            <div class="nav-item active" data-section="users">
                 <i class="fas fa-users"></i>
                 <span>View users</span>
             </div>
@@ -288,32 +284,7 @@
             <h1 id="section-title">Legal Contacts</h1>
         </div>
 
-        <div id="legal-contacts" class="content-section">
-            <div class="content-card">
-                <h3>Uploaded Contracts</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Contract ID</th>
-                                <th>User</th>
-                                <th>Type</th>
-                                <th>Jurisdiction</th>
-                                <th>LLM Model</th>
-                                <th>Upload Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="contracts-tbody">
-                            <tr>
-                                <td colspan="6" style="text-align: center; padding: 20px; color: #7f8c8d;">Loading contracts...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="users" class="content-section" style="display: none;">
+        <div id="users" class="content-section">
             <div class="content-card">
                 <h3>User Management</h3>
                 <div class="table-container">
@@ -429,11 +400,6 @@
                         loadUsers();
                     }
 
-                    // Load contracts data if legal-contacts section is clicked
-                    if (sectionId === 'legal-contacts') {
-                        loadContracts();
-                    }
-
                     // Load complaints data if complaints section is clicked
                     if (sectionId === 'complaints') {
                         loadComplaints();
@@ -475,39 +441,6 @@
                     .catch(error => {
                         console.error('Error loading users:', error);
                         document.getElementById('users-tbody').innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #e74c3c;">Error loading users</td></tr>';
-                    });
-            }
-
-            // Function to load contracts via AJAX
-            function loadContracts() {
-                fetch('/api/get-contracts/')
-                    .then(response => response.json())
-                    .then(data => {
-                        const contractsTbody = document.getElementById('contracts-tbody');
-                        
-                        if (data.status === 'success' && data.contracts.length > 0) {
-                            contractsTbody.innerHTML = '';
-                            data.contracts.forEach(contract => {
-                                const contractIdFormatted = '#CTR' + String(contract.id).padStart(3, '0');
-                                const row = `
-                                    <tr>
-                                        <td>${contractIdFormatted}</td>
-                                        <td>${contract.user}</td>
-                                        <td>${contract.contract_type}</td>
-                                        <td>${contract.jurisdiction}</td>
-                                        <td>${contract.llm_model}</td>
-                                        <td>${contract.uploaded_at}</td>
-                                    </tr>
-                                `;
-                                contractsTbody.innerHTML += row;
-                            });
-                        } else {
-                            contractsTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #7f8c8d;">No contracts found</td></tr>';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error loading contracts:', error);
-                        document.getElementById('contracts-tbody').innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #e74c3c;">Error loading contracts</td></tr>';
                     });
             }
 
